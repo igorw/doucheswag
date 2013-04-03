@@ -1,0 +1,12 @@
+{
+    "require-dev": {
+        "behat/behat": "2.4.*",
+        "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "psr-0": { "Douche": "src" }
+    },
+    "config": {
+        "bin-dir": "bin/"
+    }
+}
