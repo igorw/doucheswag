@@ -7,8 +7,10 @@ use Behat\Behat\Context\ClosuredContextInterface,
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
 
+use Douche\Requestor\InteractorFactory;
 use Douche\Entity\Auction;
 use Douche\Interactor\AuctionList;
+use Douche\Interactor\AuctionListRequest;
 use Douche\Interactor\AuctionListResponse;
 use Douche\Repository\AuctionArrayRepository;
 use Douche\View\AuctionView;
@@ -22,11 +24,20 @@ class FeatureContext extends BehatContext
     }
 
     /**
+     * @beforeScenario
+     */
+    public function setupInteractorFactory()
+    {
+        $this->container = require __DIR__ . "/container.php";
+        $this->factory = new InteractorFactory($container);
+    }
+
+    /**
      * @Given /^there are no running auctions$/
      */
     public function thereAreNoRunningAuctions()
     {
-        $this->auctions = [];
+        $this->container['auctions'] = [];
     }
 
     /**
@@ -34,9 +45,9 @@ class FeatureContext extends BehatContext
      */
     public function iListTheRunningAuctions()
     {
-        $repo = new AuctionArrayRepository($this->auctions);
-        $interactor = new AuctionList($repo);
-        $this->response = $interactor();
+        $interactor = $this->factory->make("auction_list");
+        $request = new AuctionListRequest();
+        $this->response = $interactor($request);
     }
 
     /**
@@ -55,7 +66,7 @@ class FeatureContext extends BehatContext
      */
     public function thereAreSomeRunningAuctions()
     {
-        $this->auctions = [
+        $this->container['auctions'] = [
             new Auction('Swag Hat'),
         ];
     }

@@ -2,11 +2,13 @@
 
 namespace Douche\Interactor;
 
+use Douche\Requestor\Request;
+use Douche\Requestor\Interactor;
 use Douche\Entity\Auction;
 use Douche\Entity\AuctionRepository;
 use Douche\View\AuctionView;
 
-class AuctionList
+class AuctionList implements Interactor
 {
     private $repo;
 
@@ -15,7 +17,7 @@ class AuctionList
         $this->repo = $repo;
     }
 
-    public function __invoke()
+    public function __invoke(Request $request)
     {
         $auctions = $this->repo->findAll();
         $auctionViews = array_map([$this, 'createAuctionView'], $auctions);
