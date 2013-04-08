@@ -13,12 +13,15 @@ use Douche\Interactor\AuctionListResponse;
 use Douche\Repository\AuctionArrayRepository;
 use Douche\View\AuctionView;
 
+require_once __DIR__ . '/AuctionHelper.php';
+
 require_once 'vendor/phpunit/phpunit/PHPUnit/Framework/Assert/Functions.php';
 
 class FeatureContext extends BehatContext
 {
     public function __construct(array $parameters)
     {
+        $this->auctionHelper = new AuctionHelper();
     }
 
     /**
@@ -26,7 +29,7 @@ class FeatureContext extends BehatContext
      */
     public function thereAreNoRunningAuctions()
     {
-        $this->auctions = [];
+        $this->auctionHelper->truncateAuctions();
     }
 
     /**
@@ -34,9 +37,7 @@ class FeatureContext extends BehatContext
      */
     public function iListTheRunningAuctions()
     {
-        $repo = new AuctionArrayRepository($this->auctions);
-        $interactor = new AuctionList($repo);
-        $this->response = $interactor();
+        $this->auctionHelper->listAuctions();
     }
 
     /**
@@ -44,10 +45,7 @@ class FeatureContext extends BehatContext
      */
     public function iShouldSeeNoRunningAuctions()
     {
-        assertEquals(
-            new AuctionListResponse([]),
-            $this->response
-        );
+        $this->auctionHelper->assertNoRunningAuctions();
     }
 
     /**
@@ -55,9 +53,7 @@ class FeatureContext extends BehatContext
      */
     public function thereAreSomeRunningAuctions()
     {
-        $this->auctions = [
-            new Auction('Swag Hat'),
-        ];
+        $this->auctionHelper->createAuction("Swag Hat");
     }
 
     /**
@@ -65,11 +61,7 @@ class FeatureContext extends BehatContext
      */
     public function iShouldSeeSomeRunningAuctions()
     {
-        assertEquals(
-            new AuctionListResponse([
-                new AuctionView(['name' => 'Swag Hat']),
-            ]),
-            $this->response
-        );
+        $this->auctionHelper->assertSomeRunningAuctions();
     }
+
 }
