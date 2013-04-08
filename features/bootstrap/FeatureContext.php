@@ -64,4 +64,28 @@ class FeatureContext extends BehatContext
         $this->auctionHelper->assertSomeRunningAuctions();
     }
 
+    /**
+     * @Given /^there is a running auction$/
+     */
+    public function thereIsARunningAuction()
+    {
+        $this->auctionHelper->createAuction("Swag Scarf");
+    }
+
+    /**
+     * @When /^I view the running auction$/
+     */
+    public function iViewTheRunningAuction()
+    {
+        $this->auctionHelper->viewAuction();
+    }
+
+    /**
+     * @Then /^I should see the running auction$/
+     */
+    public function iShouldSeeTheRunningAuction()
+    {
+        $this->auctionHelper->assertAuctionPresent();
+    }
+
 }

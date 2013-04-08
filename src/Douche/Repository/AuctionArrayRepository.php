@@ -17,4 +17,15 @@ class AuctionArrayRepository implements AuctionRepository
     {
         return $this->auctions;
     }
+
+    public function find($id)
+    {
+        foreach($this->auctions as $auction) {
+            if ($auction->getId() === $id) {
+                return $auction;
+            }
+        }
+
+        return null;
+    }
 }

@@ -18,7 +18,8 @@ class AuctionHelper
 
     public function createAuction($name)
     {
-        $this->auctions[] = new Auction($name);
+        $this->auctions[] = $auction = new Auction(count($this->auctions) + 1, $name);
+        $this->auction = $auction;
     }
 
     public function truncateAuctions()
@@ -31,6 +32,18 @@ class AuctionHelper
     {
         $interactor = new AuctionList($this->getRepository());
         $this->response = $interactor();
+    }
+
+    public function viewAuction()
+    {
+        $interactor = new AuctionViewInteractor($this->getRepository());
+        $request = new AuctionViewRequest($this->auction->getId());
+        $this->response = $interactor($request);
+    }
+
+    public function assertAuctionPresent()
+    {
+        assertInstanceOf("Douche\View\AuctionView", $this->response->auction);
     }
 
     public function assertNoRunningAuctions()
