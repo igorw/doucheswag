@@ -1,20 +1,32 @@
 <?php
 
 use Douche\Entity\Auction;
+use Douche\Entity\User;
 use Douche\Interactor\AuctionList;
 use Douche\Interactor\AuctionView as AuctionViewInteractor;
 use Douche\Interactor\AuctionViewRequest;
+use Douche\Interactor\Bid as BidInteractor;
+use Douche\Interactor\BidRequest;
 use Douche\Repository\AuctionArrayRepository;
+use Douche\Repository\UserArrayRepository;
+use Douche\Value\Bid as BidValue;
 use Douche\View\AuctionView;
 
 require_once 'vendor/phpunit/phpunit/PHPUnit/Framework/Assert/Functions.php';
 
 class AuctionHelper
 {
-    protected $repo;
+    protected $auctionRepo;
+    protected $userRepo;
     protected $auctions = array();
+    protected $users = array();
     protected $auction;
     protected $response;
+
+    public function __construct(array $users)
+    {
+        $this->users = $users;
+    }
 
     public function createAuction($name)
     {
@@ -25,19 +37,26 @@ class AuctionHelper
     public function truncateAuctions()
     {
         $this->auctions = array();
-        $this->repo = null;
+        $this->auctionRepo = null;
     }
 
     public function listAuctions()
     {
-        $interactor = new AuctionList($this->getRepository());
+        $interactor = new AuctionList($this->getAuctionRepository());
         $this->response = $interactor();
     }
 
     public function viewAuction()
     {
-        $interactor = new AuctionViewInteractor($this->getRepository());
+        $interactor = new AuctionViewInteractor($this->getAuctionRepository());
         $request = new AuctionViewRequest($this->auction->getId());
+        $this->response = $interactor($request);
+    }
+
+    public function placeBid(User $user, $amount)
+    {
+        $interactor = new BidInteractor($this->getAuctionRepository(), $this->getUserRepository());
+        $request = new BidRequest($this->auction->getId(), $user->getId(), $amount);
         $this->response = $interactor($request);
     }
 
@@ -56,12 +75,22 @@ class AuctionHelper
         assertGreaterThan(0, count($this->response->auctions));
     }
 
-    protected function getRepository()
+    public function assertBidPlaced()
     {
-        if ($this->repo) {
-            return $this->repo;
-        }
+        assertInstanceOf("Douche\Interactor\BidResponse", $this->response);
+    }
 
-        return $this->repo = new AuctionArrayRepository($this->auctions);
+    protected function getAuctionRepository()
+    {
+        $this->auctionRepo = $this->auctionRepo ?: new AuctionArrayRepository($this->auctions);
+
+        return $this->auctionRepo;
+    }
+
+    protected function getUserRepository()
+    {
+        $this->userRepo = $this->userRepo ?: new UserArrayRepository($this->users);
+
+        return $this->userRepo;
     }
 }
