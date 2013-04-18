@@ -75,6 +75,11 @@ class AuctionHelper
         assertGreaterThan(0, count($this->response->auctions));
     }
 
+    public function assertBidPlaced()
+    {
+        assertInstanceOf("Douche\Interactor\BidResponse", $this->response);
+    }
+
     protected function getAuctionRepository()
     {
         $this->auctionRepo = $this->auctionRepo ?: new AuctionArrayRepository($this->auctions);

@@ -115,4 +115,12 @@ class FeatureContext extends BehatContext
     {
         $this->auctionHelper->placeBid($this->user, 1.0);
     }
+
+    /**
+     * @Then /^I should see my bid is accepted$/
+     */
+    public function iShouldSeeMyBidIsAccepted()
+    {
+        $this->auctionHelper->assertBidPlaced();
+    }
 }
