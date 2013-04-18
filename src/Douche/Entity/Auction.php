@@ -26,8 +26,27 @@ class Auction
         return $this->name;
     }
 
-    public function bid(User $user, Bid $bid)
+    public function bid(User $bidder, Bid $bid)
     {
-        $this->bids[] = [$user, $bid];
+        $this->bids[] = [$bidder, $bid];
+    }
+
+    public function getHighestBid()
+    {
+        list($bidder, $bid) = $this->getHighestBidTuple();
+
+        return $bid;
+    }
+
+    public function getHighestBidder()
+    {
+        list($bidder, $bid) = $this->getHighestBidTuple();
+
+        return $bidder;
+    }
+
+    private function getHighestBidTuple()
+    {
+        return end($this->bids);
     }
 }
