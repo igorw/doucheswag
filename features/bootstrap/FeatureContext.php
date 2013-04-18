@@ -8,6 +8,7 @@ use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
 
 use Douche\Entity\Auction;
+use Douche\Entity\User;
 use Douche\Interactor\AuctionList;
 use Douche\Interactor\AuctionListResponse;
 use Douche\Repository\AuctionArrayRepository;
@@ -21,7 +22,10 @@ class FeatureContext extends BehatContext
 {
     public function __construct(array $parameters)
     {
-        $this->auctionHelper = new AuctionHelper();
+        $this->users = [
+            'igorw' => new User('igorw'),
+        ];
+        $this->auctionHelper = new AuctionHelper(array_values($this->users));
     }
 
     /**
@@ -88,4 +92,35 @@ class FeatureContext extends BehatContext
         $this->auctionHelper->assertAuctionPresent();
     }
 
+    /**
+     * @Given /^I am a registered user$/
+     */
+    public function iAmARegisteredUser()
+    {
+        $this->user = $this->users['igorw'];
+    }
+
+    /**
+     * @Given /^I am viewing the auction$/
+     */
+    public function iAmViewingTheAuction()
+    {
+        $this->auctionHelper->viewAuction();
+    }
+
+    /**
+     * @When /^I place a bid on the running auction$/
+     */
+    public function iPlaceABidOnTheRunningAuction()
+    {
+        $this->auctionHelper->placeBid($this->user, 1.0);
+    }
+
+    /**
+     * @Then /^I should see my bid is accepted$/
+     */
+    public function iShouldSeeMyBidIsAccepted()
+    {
+        $this->auctionHelper->assertBidPlaced();
+    }
 }
