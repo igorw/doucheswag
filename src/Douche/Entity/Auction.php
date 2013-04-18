@@ -2,10 +2,13 @@
 
 namespace Douche\Entity;
 
+use Douche\Value\Bid;
+
 class Auction
 {
     private $id;
     private $name;
+    private $bids = [];
 
     public function __construct($id, $name)
     {
@@ -21,5 +24,10 @@ class Auction
     public function getName()
     {
         return $this->name;
+    }
+
+    public function bid(User $user, Bid $bid)
+    {
+        $this->bids[] = [$user, $bid];
     }
 }
