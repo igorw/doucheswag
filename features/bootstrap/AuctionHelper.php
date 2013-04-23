@@ -11,6 +11,7 @@ use Douche\Repository\AuctionArrayRepository;
 use Douche\Repository\UserArrayRepository;
 use Douche\Value\Bid as BidValue;
 use Douche\View\AuctionView;
+use Douche\Exception\Exception as DoucheException;
 
 require_once 'vendor/phpunit/phpunit/PHPUnit/Framework/Assert/Functions.php';
 
@@ -63,7 +64,12 @@ class AuctionHelper
 
         $interactor = new BidInteractor($this->getAuctionRepository(), $this->getUserRepository());
         $request = new BidRequest($this->auction->getId(), $user->getId(), $amount);
-        $this->response = $interactor($request);
+
+        try {
+            $this->response = $interactor($request);
+        } catch (DoucheException $e) {
+            $this->response = $e;
+        }
     }
 
     public function assertAuctionPresent()
@@ -84,13 +90,11 @@ class AuctionHelper
     public function assertBidAccepted()
     {
         assertInstanceOf("Douche\Interactor\BidResponse", $this->response);
-        assertTrue($this->response->isSuccess());
     }
 
     public function assertBidRejected()
     {
-        assertInstanceOf("Douche\Interactor\BidResponse", $this->response);
-        assertFalse($this->response->isSuccess());
+        assertInstanceOf("Douche\Exception\BidRejectedException", $this->response);
     }
 
     protected function getAuctionRepository()
