@@ -3,6 +3,7 @@
 namespace Douche\Entity;
 
 use Douche\Value\Bid;
+use Douche\Exception\BidTooLowException;
 
 class Auction
 {
@@ -28,6 +29,12 @@ class Auction
 
     public function bid(User $bidder, Bid $bid)
     {
+        $highestBid = $this->getHighestBid();
+
+        if ($highestBid && $bid->getAmount() <= $highestBid->getAmount()) {
+            throw new BidTooLowException();
+        }
+
         $this->bids[] = [$bidder, $bid];
     }
 
