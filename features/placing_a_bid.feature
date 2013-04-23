@@ -26,9 +26,10 @@ Feature: Placing a bid on an auction
 
     Scenario: Place a bid below the required minimum
         Given there is a running auction
+        And the auction has a high bid of "10.00"
         And I am a registered user
         And I am viewing the auction
-        When I place a low bid on the auction
+        When I place a bid of "9.00" on the auction
         Then I should see my bid is rejected
 
     Scenario: Place a bid on a closed auction

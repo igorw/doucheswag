@@ -113,14 +113,38 @@ class FeatureContext extends BehatContext
      */
     public function iPlaceABidOnTheRunningAuction()
     {
-        $this->auctionHelper->placeBid($this->user, 1.0);
+        $this->auctionHelper->placeBid(1.0, $this->user);
     }
 
+    /**
+     * @When /^I place a bid of "([^"]+)" on the auction$/
+     */
+    public function iPlaceABidOfXXXOnTheRunningAuction($amount)
+    {
+        $this->auctionHelper->placeBid($amount, $this->user);
+    }
+    
     /**
      * @Then /^I should see my bid is accepted$/
      */
     public function iShouldSeeMyBidIsAccepted()
     {
-        $this->auctionHelper->assertBidPlaced();
+        $this->auctionHelper->assertBidAccepted();
+    }
+
+    /**
+     * @Then /^I should see my bid is rejected$/
+     */
+    public function iShouldSeeMyBidIsRejected()
+    {
+        $this->auctionHelper->assertBidRejected();
+    }
+
+    /**
+     * @Given /^the auction has a high bid of "([^"]*)"$/
+     */
+    public function theAuctionHasAHighBidOf($amount)
+    {
+        $this->auctionHelper->placeBid($amount);
     }
 }

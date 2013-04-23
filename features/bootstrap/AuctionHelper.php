@@ -53,8 +53,13 @@ class AuctionHelper
         $this->response = $interactor($request);
     }
 
-    public function placeBid(User $user, $amount)
+    public function placeBid($amount, User $user = null)
     {
+        if ($user == null) {
+            $user = new User(uniqid());
+            $this->users[] = $user;
+        }
+
         $interactor = new BidInteractor($this->getAuctionRepository(), $this->getUserRepository());
         $request = new BidRequest($this->auction->getId(), $user->getId(), $amount);
         $this->response = $interactor($request);
@@ -75,9 +80,16 @@ class AuctionHelper
         assertGreaterThan(0, count($this->response->auctions));
     }
 
-    public function assertBidPlaced()
+    public function assertBidAccepted()
     {
         assertInstanceOf("Douche\Interactor\BidResponse", $this->response);
+        assertTrue($this->response->isSuccess());
+    }
+
+    public function assertBidRejected()
+    {
+        assertInstanceOf("Douche\Interactor\BidResponse", $this->response);
+        assertFalse($this->response->isSuccess());
     }
 
     protected function getAuctionRepository()
