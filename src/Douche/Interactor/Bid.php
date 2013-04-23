@@ -6,7 +6,7 @@ use Douche\Entity\AuctionRepository;
 use Douche\Entity\UserRepository;
 use Douche\Value\Bid as BidValue;
 use Douche\View\AuctionView as AuctionViewDto;
-use Douche\Exception\BidTooLowException;
+use Douche\Exception\Exception;
 
 class Bid
 {
@@ -29,8 +29,8 @@ class Bid
 
         try {
             $auction->bid($user, $bid);
-        } catch (BidTooLowException $e) {
-            $status = BidResponse::STATUS_FAILED_TOO_LOW;
+        } catch (Exception $e) {
+            return BidResponse::fromException($bid, $e);
         }
 
         return new BidResponse($bid, $status);

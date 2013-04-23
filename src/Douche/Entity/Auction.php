@@ -4,6 +4,7 @@ namespace Douche\Entity;
 
 use Douche\Value\Bid;
 use Douche\Exception\BidTooLowException;
+use Douche\Exception\AuctionClosedException;
 use DateTime;
 
 class Auction
@@ -32,6 +33,10 @@ class Auction
 
     public function bid(User $bidder, Bid $bid)
     {
+        if (!$this->isRunning()) {
+            throw new AuctionClosedException();
+        }
+
         $highestBid = $this->getHighestBid();
 
         if ($highestBid && $bid->getAmount() <= $highestBid->getAmount()) {
