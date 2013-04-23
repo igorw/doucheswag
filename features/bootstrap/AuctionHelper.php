@@ -28,9 +28,10 @@ class AuctionHelper
         $this->users = $users;
     }
 
-    public function createAuction($name)
+    public function createAuction($name, $endingAt = null)
     {
-        $this->auctions[] = $auction = new Auction(count($this->auctions) + 1, $name);
+        $endingAt = $endingAt ?: new \DateTime("+10 days");
+        $this->auctions[] = $auction = new Auction(count($this->auctions) + 1, $name, $endingAt);
         $this->auction = $auction;
     }
 

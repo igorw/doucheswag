@@ -69,11 +69,12 @@ class FeatureContext extends BehatContext
     }
 
     /**
-     * @Given /^there is a running auction$/
+     * @Given /^there is a (closed|running) auction$/
      */
-    public function thereIsARunningAuction()
+    public function thereIsAAuction($status)
     {
-        $this->auctionHelper->createAuction("Swag Scarf");
+        $endingAt = $status == 'closed' ? new \DateTime("-1 days") : null;
+        $this->auctionHelper->createAuction("Swag Scarf", $endingAt);
     }
 
     /**
@@ -109,7 +110,7 @@ class FeatureContext extends BehatContext
     }
 
     /**
-     * @When /^I place a bid on the running auction$/
+     * @When /^I place a bid on the(?:| running) auction$/
      */
     public function iPlaceABidOnTheRunningAuction()
     {

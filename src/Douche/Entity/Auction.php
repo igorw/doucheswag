@@ -4,17 +4,20 @@ namespace Douche\Entity;
 
 use Douche\Value\Bid;
 use Douche\Exception\BidTooLowException;
+use DateTime;
 
 class Auction
 {
     private $id;
     private $name;
+    private $endingAt;
     private $bids = [];
 
-    public function __construct($id, $name)
+    public function __construct($id, $name, DateTime $endingAt)
     {
         $this->id = $id;
         $this->name = $name;
+        $this->endingAt = $endingAt;
     }
 
     public function getId()
@@ -50,6 +53,12 @@ class Auction
         list($bidder, $bid) = $this->getHighestBidTuple();
 
         return $bidder;
+    }
+
+    public function isRunning()
+    {
+        $now = new DateTime();
+        return $this->endingAt > $now;
     }
 
     private function getHighestBidTuple()
