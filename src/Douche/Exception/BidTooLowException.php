@@ -2,7 +2,7 @@
 
 namespace Douche\Exception;
 
-class BidTooLowException extends Exception
+class BidTooLowException extends BidRejectedException
 {
     
 }
