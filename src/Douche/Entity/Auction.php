@@ -3,6 +3,7 @@
 namespace Douche\Entity;
 
 use Douche\Value\Bid;
+use Douche\Value\Currency;
 use Douche\Exception\BidTooLowException;
 use Douche\Exception\AuctionClosedException;
 use DateTime;
@@ -14,11 +15,12 @@ class Auction
     private $endingAt;
     private $bids = [];
 
-    public function __construct($id, $name, DateTime $endingAt)
+    public function __construct($id, $name, DateTime $endingAt, Currency $currency)
     {
         $this->id = $id;
         $this->name = $name;
         $this->endingAt = $endingAt;
+        $this->currency = $currency;
     }
 
     public function getId()
@@ -29,6 +31,11 @@ class Auction
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getCurrency()
+    {
+        return $this->currency;
     }
 
     public function bid(User $bidder, Bid $bid)

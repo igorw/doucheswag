@@ -10,6 +10,7 @@ use Douche\Interactor\BidRequest;
 use Douche\Repository\AuctionArrayRepository;
 use Douche\Repository\UserArrayRepository;
 use Douche\Value\Bid as BidValue;
+use Douche\Value\Currency;
 use Douche\View\AuctionView;
 use Douche\Exception\Exception as DoucheException;
 
@@ -32,7 +33,7 @@ class AuctionHelper
     public function createAuction($name, $endingAt = null)
     {
         $endingAt = $endingAt ?: new \DateTime("+10 days");
-        $this->auctions[] = $auction = new Auction(count($this->auctions) + 1, $name, $endingAt);
+        $this->auctions[] = $auction = new Auction(count($this->auctions) + 1, $name, $endingAt, new Currency("BTC", "Bitcoin"));
         $this->auction = $auction;
     }
 
