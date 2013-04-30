@@ -10,9 +10,11 @@ use Douche\Interactor\BidRequest;
 use Douche\Repository\AuctionArrayRepository;
 use Douche\Repository\UserArrayRepository;
 use Douche\Value\Bid as BidValue;
+use Douche\Value\Money;
 use Douche\Value\Currency;
 use Douche\View\AuctionView;
 use Douche\Exception\Exception as DoucheException;
+use Douche\Service\DumbCurrencyConverter;
 
 require_once 'vendor/phpunit/phpunit/PHPUnit/Framework/Assert/Functions.php';
 
@@ -56,14 +58,24 @@ class AuctionHelper
         $this->response = $interactor($request);
     }
 
-    public function placeBid($amount, User $user = null)
+    public function placeBidWithAlternateCurrency($amount, User $user = null) {
+        return $this->placeBid($amount, $user, new Currency("YOLO", "Yolos"));
+    }
+
+    public function placeBid($amount, User $user = null, Currency $currency = null)
     {
         if ($user == null) {
             $user = new User(uniqid());
             $this->users[] = $user;
         }
 
-        $interactor = new BidInteractor($this->getAuctionRepository(), $this->getUserRepository());
+        $interactor = new BidInteractor(
+            $this->getAuctionRepository(), 
+            $this->getUserRepository(),
+            new DumbCurrencyConverter()
+        );
+
+        $amount = new Money(1000, $currency ?: $this->auction->getCurrency());
         $request = new BidRequest($this->auction->getId(), $user->getId(), $amount);
 
         try {
@@ -91,6 +103,15 @@ class AuctionHelper
     public function assertBidAccepted()
     {
         assertInstanceOf("Douche\Interactor\BidResponse", $this->response);
+    }
+
+    public function assertBidAcceptedWithCurrencyConversion()
+    {
+        assertInstanceOf("Douche\Interactor\BidResponse", $this->response);
+        assertNotSame(
+            $this->response->getBid()->getAmount(),
+            $this->response->getBid()->getOriginalAmount()
+        ); 
     }
 
     public function assertBidRejected()

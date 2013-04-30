@@ -14,4 +14,8 @@ class BidResponse
         $this->bid = $bid;
     }
 
+    public function getBid()
+    {
+        return $this->bid;
+    }
 }

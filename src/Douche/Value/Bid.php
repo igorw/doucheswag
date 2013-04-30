@@ -5,14 +5,21 @@ namespace Douche\Value;
 class Bid
 {
     private $amount;
+    private $originalAmount;
 
-    public function __construct($amount)
+    public function __construct(Money $amount, Money $originalAmount)
     {
         $this->amount = $amount;
+        $this->originalAmount = $originalAmount;
     }
 
     public function getAmount()
     {
         return $this->amount;
+    }
+
+    public function getOriginalAmount()
+    {
+        return $this->originalAmount;
     }
 }
