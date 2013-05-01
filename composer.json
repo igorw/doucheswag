@@ -8,5 +8,8 @@
     },
     "config": {
         "bin-dir": "bin/"
+    },
+    "require": {
+        "mathiasverraes/money": "1.2.*"
     }
 }

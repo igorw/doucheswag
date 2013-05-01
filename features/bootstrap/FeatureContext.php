@@ -118,6 +118,14 @@ class FeatureContext extends BehatContext
     }
 
     /**
+     * @When /^I place a bid on the running auction in a different currency$/
+     */
+    public function iPlaceABidOnTheRunningAuctionInADifferentCurrency()
+    {
+        $this->auctionHelper->placeBidWithAlternateCurrency(1.0, $this->user);
+    }
+
+    /**
      * @When /^I place a bid of "([^"]+)" on the auction$/
      */
     public function iPlaceABidOfXXXOnTheRunningAuction($amount)
@@ -148,4 +156,14 @@ class FeatureContext extends BehatContext
     {
         $this->auctionHelper->placeBid($amount);
     }
+
+
+    /**
+     * @Given /^I should see the amount placed in the auction currency$/
+     */
+    public function iShouldSeeTheAmountPlacedInTheAuctionCurrency()
+    {
+        $this->auctionHelper->assertBidAcceptedWithCurrencyConversion();
+    }
+
 }

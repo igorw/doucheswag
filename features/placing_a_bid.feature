@@ -22,7 +22,7 @@ Feature: Placing a bid on an auction
         And I am viewing the auction
         When I place a bid on the running auction in a different currency
         Then I should see my bid is accepted
-        And I should see the currency conversion rate
+        And I should see the amount placed in the auction currency
 
     Scenario: Place a bid below the required minimum
         Given there is a running auction
