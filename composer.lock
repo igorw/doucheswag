@@ -1,7 +1,60 @@
 {
-    "hash": "e038494e3489c0c0417568aad7bfb13f",
+    "hash": "25a2debf43e3ff055b144dbad82d300f",
     "packages": [
-
+        {
+            "name": "mathiasverraes/money",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mathiasverraes/money.git",
+                "reference": "1.2.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mathiasverraes/money/zipball/1.2.0",
+                "reference": "1.2.0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "suggest": {
+                "pink-tie/money-bundle": "For Symfony integration."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Money": "lib"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mathias Verraes",
+                    "email": "mathias@verraes.net",
+                    "role": "Developer of wrapped Money library"
+                }
+            ],
+            "description": "PHP implementation of Fowler's Money pattern",
+            "homepage": "http://verraes.net/2011/04/fowler-money-pattern-in-php/",
+            "keywords": [
+                "Generic Sub-domain",
+                "Value Object",
+                "money"
+            ],
+            "time": "2013-04-12 23:10:48"
+        }
     ],
     "packages-dev": [
         {

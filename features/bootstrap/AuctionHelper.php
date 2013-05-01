@@ -12,6 +12,9 @@ use Douche\Repository\UserArrayRepository;
 use Douche\Value\Bid as BidValue;
 use Douche\View\AuctionView;
 use Douche\Exception\Exception as DoucheException;
+use Douche\Service\DumbCurrencyConverter;
+use Money\Money;
+use Money\Currency;
 
 require_once 'vendor/phpunit/phpunit/PHPUnit/Framework/Assert/Functions.php';
 
@@ -32,7 +35,7 @@ class AuctionHelper
     public function createAuction($name, $endingAt = null)
     {
         $endingAt = $endingAt ?: new \DateTime("+10 days");
-        $this->auctions[] = $auction = new Auction(count($this->auctions) + 1, $name, $endingAt);
+        $this->auctions[] = $auction = new Auction(count($this->auctions) + 1, $name, $endingAt, new Currency("USD"));
         $this->auction = $auction;
     }
 
@@ -55,14 +58,24 @@ class AuctionHelper
         $this->response = $interactor($request);
     }
 
-    public function placeBid($amount, User $user = null)
+    public function placeBidWithAlternateCurrency($amount, User $user = null) {
+        return $this->placeBid($amount, $user, new Currency("GBP"));
+    }
+
+    public function placeBid($amount, User $user = null, Currency $currency = null)
     {
         if ($user == null) {
             $user = new User(uniqid());
             $this->users[] = $user;
         }
 
-        $interactor = new BidInteractor($this->getAuctionRepository(), $this->getUserRepository());
+        $interactor = new BidInteractor(
+            $this->getAuctionRepository(), 
+            $this->getUserRepository(),
+            new DumbCurrencyConverter()
+        );
+
+        $amount = new Money(intval($amount * 100), $currency ?: $this->auction->getCurrency());
         $request = new BidRequest($this->auction->getId(), $user->getId(), $amount);
 
         try {
@@ -90,6 +103,15 @@ class AuctionHelper
     public function assertBidAccepted()
     {
         assertInstanceOf("Douche\Interactor\BidResponse", $this->response);
+    }
+
+    public function assertBidAcceptedWithCurrencyConversion()
+    {
+        assertInstanceOf("Douche\Interactor\BidResponse", $this->response);
+        assertNotSame(
+            $this->response->getBid()->getAmount(),
+            $this->response->getBid()->getOriginalAmount()
+        ); 
     }
 
     public function assertBidRejected()
