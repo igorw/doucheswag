@@ -2,6 +2,8 @@
 
 namespace Douche\Value;
 
+use Money\Money;
+
 class Bid
 {
     private $amount;

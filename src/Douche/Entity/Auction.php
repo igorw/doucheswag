@@ -3,10 +3,10 @@
 namespace Douche\Entity;
 
 use Douche\Value\Bid;
-use Douche\Value\Currency;
 use Douche\Exception\BidTooLowException;
 use Douche\Exception\AuctionClosedException;
 use DateTime;
+use Money\Currency;
 
 class Auction
 {

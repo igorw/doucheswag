@@ -2,7 +2,7 @@
 
 namespace Douche\Interactor;
 
-use Douche\Value\Money;
+use Money\Money; 
 
 class BidRequest
 {

@@ -3,8 +3,8 @@
 namespace Douche\Service;
 
 use Douche\Interactor\CurrencyConverter;
-use Douche\Value\Money;
-use Douche\Value\Currency;
+use Money\Money;
+use Money\Currency;
 
 class DumbCurrencyConverter implements CurrencyConverter
 {

@@ -2,8 +2,8 @@
 
 namespace Douche\Interactor;
 
-use Douche\Value\Currency;
-use Douche\Value\Money;
+use Money\Currency;
+use Money\Money;
 
 interface CurrencyConverter 
 {

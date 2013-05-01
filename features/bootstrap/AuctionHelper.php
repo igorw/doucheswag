@@ -10,11 +10,11 @@ use Douche\Interactor\BidRequest;
 use Douche\Repository\AuctionArrayRepository;
 use Douche\Repository\UserArrayRepository;
 use Douche\Value\Bid as BidValue;
-use Douche\Value\Money;
-use Douche\Value\Currency;
 use Douche\View\AuctionView;
 use Douche\Exception\Exception as DoucheException;
 use Douche\Service\DumbCurrencyConverter;
+use Money\Money;
+use Money\Currency;
 
 require_once 'vendor/phpunit/phpunit/PHPUnit/Framework/Assert/Functions.php';
 
@@ -35,7 +35,7 @@ class AuctionHelper
     public function createAuction($name, $endingAt = null)
     {
         $endingAt = $endingAt ?: new \DateTime("+10 days");
-        $this->auctions[] = $auction = new Auction(count($this->auctions) + 1, $name, $endingAt, new Currency("BTC", "Bitcoin"));
+        $this->auctions[] = $auction = new Auction(count($this->auctions) + 1, $name, $endingAt, new Currency("USD"));
         $this->auction = $auction;
     }
 
@@ -59,7 +59,7 @@ class AuctionHelper
     }
 
     public function placeBidWithAlternateCurrency($amount, User $user = null) {
-        return $this->placeBid($amount, $user, new Currency("YOLO", "Yolos"));
+        return $this->placeBid($amount, $user, new Currency("GBP"));
     }
 
     public function placeBid($amount, User $user = null, Currency $currency = null)
@@ -75,7 +75,7 @@ class AuctionHelper
             new DumbCurrencyConverter()
         );
 
-        $amount = new Money($amount, $currency ?: $this->auction->getCurrency());
+        $amount = new Money(intval($amount * 100), $currency ?: $this->auction->getCurrency());
         $request = new BidRequest($this->auction->getId(), $user->getId(), $amount);
 
         try {
