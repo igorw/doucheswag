@@ -75,7 +75,7 @@ class AuctionHelper
             new DumbCurrencyConverter()
         );
 
-        $amount = new Money(1000, $currency ?: $this->auction->getCurrency());
+        $amount = new Money($amount, $currency ?: $this->auction->getCurrency());
         $request = new BidRequest($this->auction->getId(), $user->getId(), $amount);
 
         try {
