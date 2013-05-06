@@ -27,9 +27,19 @@ class FeatureContext extends BehatContext
             'igorw' => new User('igorw'),
         ];
 
+        $this->rawUsers = [
+            'davedevelopment' => [
+                'id'        => 'davedevelopment',
+                'name'      => 'Dave Marshall',
+                'email'     => 'dave.marshall@atstsolutions.co.uk',
+                'password'  => 'foo',
+            ],
+        ];
+
         $this->userRepository = new UserArrayRepository(array_values($this->users));
 
         $this->auctionHelper = new AuctionHelper($this->userRepository);
+        $this->userHelper    = new UserHelper($this->userRepository);
     }
 
     /**
@@ -169,4 +179,28 @@ class FeatureContext extends BehatContext
         $this->auctionHelper->assertBidAcceptedWithCurrencyConversion();
     }
 
+    /**
+     * @Given /^I am an anonymous user$/
+     */
+    public function iAmAnAnonymousUser()
+    {
+        $this->user = null;
+    }
+
+    /**
+     * @When /^I register a new user account as "([^"]*)"$/
+     */
+    public function iRegisterANewUserAccount($userId)
+    {
+        $userData = $this->rawUsers[$userId];
+        $this->userHelper->registerUserAccount($userData);
+    }
+
+    /**
+     * @Then /^I should see my account "([^"]*)" was created$/
+     */
+    public function iShouldSeeMyAccountWasCreated($userId)
+    {
+        $this->userHelper->assertUserCreated($userId);
+    }
 }
