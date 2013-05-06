@@ -24,7 +24,7 @@ class FeatureContext extends BehatContext
     public function __construct(array $parameters)
     {
         $this->users = [
-            'igorw' => new User('igorw'),
+            'igorw' => new User('igorw', 'Igor Wiedler', 'igor@wiedler.ch', 'BAR'),
         ];
 
         $this->rawUsers = [

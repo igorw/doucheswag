@@ -64,7 +64,7 @@ class AuctionHelper
     public function placeBid($amount, User $user = null, Currency $currency = null)
     {
         if ($user == null) {
-            $user = new User(uniqid());
+            $user = new User(uniqid(), uniqid(), uniqid().'@'.uniqid().'.com', uniqid());
             $this->userRepo->add($user);
         }
 
