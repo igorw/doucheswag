@@ -21,7 +21,9 @@ class AuctionView
         $view = new AuctionViewDto([
             'name'          => $auction->getName(),
             'highestBid'    => $auction->getHighestBid(),
-            'highestBidder' => $auction->getHighestBidder()->getId(),
+            'highestBidder' => $auction->getHighestBidder()
+                                ? $auction->getHighestBidder()->getId()
+                                : null,
         ]);
 
         return new AuctionViewResponse($view);
