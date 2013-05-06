@@ -2,13 +2,13 @@
 
 use Douche\Entity\Auction;
 use Douche\Entity\User;
+use Douche\Entity\UserRepository;
 use Douche\Interactor\AuctionList;
 use Douche\Interactor\AuctionView as AuctionViewInteractor;
 use Douche\Interactor\AuctionViewRequest;
 use Douche\Interactor\Bid as BidInteractor;
 use Douche\Interactor\BidRequest;
 use Douche\Repository\AuctionArrayRepository;
-use Douche\Repository\UserArrayRepository;
 use Douche\Value\Bid as BidValue;
 use Douche\View\AuctionView;
 use Douche\Exception\Exception as DoucheException;
@@ -23,13 +23,12 @@ class AuctionHelper
     protected $auctionRepo;
     protected $userRepo;
     protected $auctions = array();
-    protected $users = array();
     protected $auction;
     protected $response;
 
-    public function __construct(array $users)
+    public function __construct(UserRepository $userRepo)
     {
-        $this->users = $users;
+        $this->userRepo = $userRepo;
     }
 
     public function createAuction($name, $endingAt = null)
@@ -66,11 +65,11 @@ class AuctionHelper
     {
         if ($user == null) {
             $user = new User(uniqid());
-            $this->users[] = $user;
+            $this->userRepo->add($user);
         }
 
         $interactor = new BidInteractor(
-            $this->getAuctionRepository(), 
+            $this->getAuctionRepository(),
             $this->getUserRepository(),
             new DumbCurrencyConverter()
         );
@@ -111,7 +110,7 @@ class AuctionHelper
         assertNotSame(
             $this->response->getBid()->getAmount(),
             $this->response->getBid()->getOriginalAmount()
-        ); 
+        );
     }
 
     public function assertBidRejected()
@@ -128,8 +127,6 @@ class AuctionHelper
 
     protected function getUserRepository()
     {
-        $this->userRepo = $this->userRepo ?: new UserArrayRepository($this->users);
-
         return $this->userRepo;
     }
 }

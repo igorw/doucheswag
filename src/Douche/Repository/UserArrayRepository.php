@@ -2,6 +2,7 @@
 
 namespace Douche\Repository;
 
+use Douche\Entity\User;
 use Douche\Entity\UserRepository;
 
 class UserArrayRepository implements UserRepository
@@ -11,6 +12,15 @@ class UserArrayRepository implements UserRepository
     public function __construct(array $users)
     {
         $this->users = $users;
+    }
+
+    public function add(User $user)
+    {
+        if (null !== $this->find($user->getId())) {
+            throw new \InvalidArgumentException('User already exists');
+        }
+
+        $this->users[] = $user;
     }
 
     public function find($id)

@@ -12,6 +12,7 @@ use Douche\Entity\User;
 use Douche\Interactor\AuctionList;
 use Douche\Interactor\AuctionListResponse;
 use Douche\Repository\AuctionArrayRepository;
+use Douche\Repository\UserArrayRepository;
 use Douche\View\AuctionView;
 
 require_once __DIR__ . '/AuctionHelper.php';
@@ -25,7 +26,10 @@ class FeatureContext extends BehatContext
         $this->users = [
             'igorw' => new User('igorw'),
         ];
-        $this->auctionHelper = new AuctionHelper(array_values($this->users));
+
+        $this->userRepository = new UserArrayRepository(array_values($this->users));
+
+        $this->auctionHelper = new AuctionHelper($this->userRepository);
     }
 
     /**
@@ -132,7 +136,7 @@ class FeatureContext extends BehatContext
     {
         $this->auctionHelper->placeBid($amount, $this->user);
     }
-    
+
     /**
      * @Then /^I should see my bid is accepted$/
      */
@@ -156,7 +160,6 @@ class FeatureContext extends BehatContext
     {
         $this->auctionHelper->placeBid($amount);
     }
-
 
     /**
      * @Given /^I should see the amount placed in the auction currency$/
