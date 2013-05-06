@@ -38,9 +38,9 @@ class Auction
         return $this->currency;
     }
 
-    public function bid(User $bidder, Bid $bid)
+    public function bid(User $bidder, Bid $bid, \DateTime $now = null)
     {
-        if (!$this->isRunning()) {
+        if (!$this->isRunning($now)) {
             throw new AuctionClosedException();
         }
 
@@ -67,9 +67,9 @@ class Auction
         return $bidder;
     }
 
-    public function isRunning()
+    public function isRunning(\DateTime $now = null)
     {
-        $now = new DateTime();
+        $now = $now ?: new DateTime();
         return $this->endingAt > $now;
     }
 
