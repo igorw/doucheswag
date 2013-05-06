@@ -5,7 +5,7 @@ namespace Douche\Interactor;
 use Douche\Entity\AuctionRepository;
 use Douche\View\AuctionView as AuctionViewDto;
 
-class AuctionView 
+class AuctionView
 {
     private $repo;
 
@@ -17,8 +17,11 @@ class AuctionView
     public function __invoke(AuctionViewRequest $request)
     {
         $auction = $this->repo->find($request->id);
+
         $view = new AuctionViewDto([
-            'name' => $auction->getName(),
+            'name'          => $auction->getName(),
+            'highestBid'    => $auction->getHighestBid(),
+            'highestBidder' => $auction->getHighestBidder()->getId(),
         ]);
 
         return new AuctionViewResponse($view);
