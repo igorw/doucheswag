@@ -14,15 +14,6 @@ class UserArrayRepository implements UserRepository
         $this->users = $users;
     }
 
-    public function add(User $user)
-    {
-        if (null !== $this->find($user->getId())) {
-            throw new \InvalidArgumentException('User already exists');
-        }
-
-        $this->users[] = $user;
-    }
-
     public function find($id)
     {
         foreach ($this->users as $user) {
@@ -32,5 +23,14 @@ class UserArrayRepository implements UserRepository
         }
 
         return null;
+    }
+
+    public function add(User $user)
+    {
+        if (null !== $this->find($user->getId())) {
+            throw new \InvalidArgumentException('User already exists');
+        }
+
+        $this->users[] = $user;
     }
 }
