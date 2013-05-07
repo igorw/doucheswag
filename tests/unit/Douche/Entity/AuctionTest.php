@@ -22,7 +22,7 @@ class AuctionTest extends \PHPUnit_Framework_TestCase
                         new \DateTime('2012-03-04'),
                         new Currency('GBP'));
 
-        $bidder = new User(42);
+        $bidder = new User(42, 'John Doe', 'john.doe@example.com', 'foo');
         $bid = new Bid(Money::GBP(200), Money::GBP(200));
         $auction->bid($bidder, $bid, $this->now);
 
@@ -38,7 +38,7 @@ class AuctionTest extends \PHPUnit_Framework_TestCase
      */
     public function higherBidShouldOverrideOldOne(Auction $auction)
     {
-        $bidder = new User(43);
+        $bidder = new User(43, 'Jane Doe', 'jane.doe@example.com', 'bar');
         $bid = new Bid(Money::GBP(205), Money::GBP(205));
         $auction->bid($bidder, $bid, $this->now);
 
