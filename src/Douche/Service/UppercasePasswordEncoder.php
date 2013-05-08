@@ -10,4 +10,9 @@ class UppercasePasswordEncoder implements PasswordEncoder
     {
         return strtoupper($password);
     }
+
+    public function isPasswordValid($encoded, $raw)
+    {
+        return $encoded === $this->encodePassword($raw);
+    }
 }
