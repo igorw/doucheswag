@@ -4,6 +4,8 @@ use Douche\Entity\UserRepository;
 use Douche\Entity\User;
 use Douche\Interactor\RegisterUser;
 use Douche\Interactor\RegisterUserRequest;
+use Douche\Interactor\UserLogin;
+use Douche\Interactor\UserLoginRequest;
 use Douche\Service\UppercasePasswordEncoder;
 
 require_once 'vendor/phpunit/phpunit/PHPUnit/Framework/Assert/Functions.php';
@@ -36,9 +38,10 @@ class UserHelper
 
     public function createUser()
     {
-        $user = new User(uniqid(), uniqid(), uniqid().'@'.uniqid().'.com', uniqid());
-        $this->getUserRepository()->add($user);
+        $this->userPassword = 'password';
+        $user = new User(uniqid(), uniqid(), uniqid().'@'.uniqid().'.com', $this->getPasswordEncoder()->encodePassword($this->userPassword));
         $this->user = $user;
+        $this->getUserRepository()->add($user);
         return $user->getId();
     }
 
@@ -55,6 +58,23 @@ class UserHelper
     public function getUserRepository()
     {
         return $this->userRepo;
+    }
+
+    public function login()
+    {
+        $request = new UserLoginRequest([
+            'email' => $this->user->getEmail(),
+            'password' => $this->userPassword,
+        ]);
+
+        $interactor = new UserLogin($this->getUserRepository(), $this->getPasswordEncoder());
+        $this->response = $interactor($request);
+    }
+
+    public function assertSuccessfulLogin()
+    {
+        assertInstanceOf("Douche\Interactor\UserLoginResponse", $this->response);
+        assertSame($this->user->getId(), $this->response->user->id);
     }
 
     private function getPasswordEncoder()

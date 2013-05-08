@@ -203,4 +203,22 @@ class FeatureContext extends BehatContext
     {
         $this->userHelper->assertUserCreated($userId);
     }
+
+    /**
+     * @When /^I login$/
+     */
+    public function iLogin()
+    {
+        $this->userHelper->login();
+    }
+
+    /**
+     * @Then /^I should be logged in$/
+     */
+    public function iShouldBeLoggedIn()
+    {
+        $this->userHelper->assertSuccessfulLogin();
+    }
+
+
 }
