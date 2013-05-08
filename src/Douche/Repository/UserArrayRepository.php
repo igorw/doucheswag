@@ -25,6 +25,17 @@ class UserArrayRepository implements UserRepository
         return null;
     }
 
+    public function findOneByEmail($email)
+    {
+        foreach ($this->users as $user) {
+            if ($user->getEmail() === $email) {
+                return $user;
+            }
+        }
+
+        return null;
+    }
+
     public function add(User $user)
     {
         if (null !== $this->find($user->getId())) {
