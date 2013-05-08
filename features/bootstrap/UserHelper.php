@@ -1,6 +1,7 @@
 <?php
 
 use Douche\Entity\UserRepository;
+use Douche\Entity\User;
 use Douche\Interactor\RegisterUser;
 use Douche\Interactor\RegisterUserRequest;
 use Douche\Service\UppercasePasswordEncoder;
@@ -12,6 +13,7 @@ class UserHelper
     private $userRepo;
     private $passwordEncoder;
     private $response;
+    private $user;
 
     public function __construct(UserRepository $userRepo)
     {
@@ -32,7 +34,25 @@ class UserHelper
         assertNotNull($this->userRepo->find($userId));
     }
 
-    private function getUserRepository()
+    public function createUser()
+    {
+        $user = new User(uniqid(), uniqid(), uniqid().'@'.uniqid().'.com', uniqid());
+        $this->getUserRepository()->add($user);
+        $this->user = $user;
+        return $user->getId();
+    }
+
+    public function getCurrentUserId()
+    {
+        return isset($this->user) ? $this->user->getId() : null;
+    }
+
+    public function iAmAnonymous()
+    {
+        $this->user = null;
+    }
+
+    public function getUserRepository()
     {
         return $this->userRepo;
     }

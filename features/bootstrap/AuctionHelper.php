@@ -21,14 +21,14 @@ require_once 'vendor/phpunit/phpunit/PHPUnit/Framework/Assert/Functions.php';
 class AuctionHelper
 {
     protected $auctionRepo;
-    protected $userRepo;
+    protected $userHelper;
     protected $auctions = array();
     protected $auction;
     protected $response;
 
-    public function __construct(UserRepository $userRepo)
+    public function __construct(UserHelper $userHelper)
     {
-        $this->userRepo = $userRepo;
+        $this->userHelper = $userHelper;
     }
 
     public function createAuction($name, $endingAt = null)
@@ -57,25 +57,26 @@ class AuctionHelper
         $this->response = $interactor($request);
     }
 
-    public function placeBidWithAlternateCurrency($amount, User $user = null) {
-        return $this->placeBid($amount, $user, new Currency("GBP"));
+    public function placeBidWithAlternateCurrency($amount, $userId = null) {
+        return $this->placeBid($amount, $userId, new Currency("GBP"));
     }
 
-    public function placeBid($amount, User $user = null, Currency $currency = null)
+    public function placeBid($amount, Currency $currency = null)
     {
-        if ($user == null) {
-            $user = new User(uniqid(), uniqid(), uniqid().'@'.uniqid().'.com', uniqid());
-            $this->userRepo->add($user);
+        $userId = $this->getUserHelper()->getCurrentUserId();
+
+        if ($userId == null) {
+            $userId = $this->getUserHelper()->createUser();
         }
 
         $interactor = new BidInteractor(
             $this->getAuctionRepository(),
-            $this->getUserRepository(),
+            $this->getUserHelper()->getUserRepository(),
             new DumbCurrencyConverter()
         );
 
         $amount = new Money(intval($amount * 100), $currency ?: $this->auction->getCurrency());
-        $request = new BidRequest($this->auction->getId(), $user->getId(), $amount);
+        $request = new BidRequest($this->auction->getId(), $userId, $amount);
 
         try {
             $this->response = $interactor($request);
@@ -118,15 +119,15 @@ class AuctionHelper
         assertInstanceOf("Douche\Exception\BidRejectedException", $this->response);
     }
 
+    protected function getUserHelper()
+    {
+        return $this->userHelper;
+    }
+
     protected function getAuctionRepository()
     {
         $this->auctionRepo = $this->auctionRepo ?: new AuctionArrayRepository($this->auctions);
 
         return $this->auctionRepo;
-    }
-
-    protected function getUserRepository()
-    {
-        return $this->userRepo;
     }
 }
