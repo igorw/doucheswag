@@ -10,7 +10,7 @@ use Phake;
 
 class UserLoginTest extends \PHPUnit_Framework_TestCase
 {
-    public function setup()
+    public function setUp()
     {
         $this->userRepo = Phake::mock('Douche\Entity\UserRepository');
         $this->passwordEncoder = Phake::mock('Douche\Interactor\PasswordEncoder');
@@ -50,8 +50,8 @@ class UserLoginTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf("Douche\View\UserView", $response->user);
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @expectedException Douche\Exception\IncorrectPasswordException
      */
     public function shouldThrowOnIncorrectPassword()
@@ -64,8 +64,8 @@ class UserLoginTest extends \PHPUnit_Framework_TestCase
         $response = call_user_func($this->interactor, $request);
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @expectedException Douche\Exception\UserNotFoundException
      */
     public function shouldThrowIfUserNotFound()
