@@ -38,8 +38,8 @@ class FeatureContext extends BehatContext
 
         $this->userRepository = new UserArrayRepository(array_values($this->users));
 
-        $this->auctionHelper = new AuctionHelper($this->userRepository);
         $this->userHelper    = new UserHelper($this->userRepository);
+        $this->auctionHelper = new AuctionHelper($this->userHelper);
     }
 
     /**
@@ -112,7 +112,7 @@ class FeatureContext extends BehatContext
      */
     public function iAmARegisteredUser()
     {
-        $this->user = $this->users['igorw'];
+        $this->userHelper->createUser();
     }
 
     /**
@@ -128,7 +128,7 @@ class FeatureContext extends BehatContext
      */
     public function iPlaceABidOnTheRunningAuction()
     {
-        $this->auctionHelper->placeBid(1.0, $this->user);
+        $this->auctionHelper->placeBid(1.0);
     }
 
     /**
@@ -136,7 +136,7 @@ class FeatureContext extends BehatContext
      */
     public function iPlaceABidOnTheRunningAuctionInADifferentCurrency()
     {
-        $this->auctionHelper->placeBidWithAlternateCurrency(1.0, $this->user);
+        $this->auctionHelper->placeBidWithAlternateCurrency(1.0);
     }
 
     /**
@@ -144,7 +144,7 @@ class FeatureContext extends BehatContext
      */
     public function iPlaceABidOfXXXOnTheRunningAuction($amount)
     {
-        $this->auctionHelper->placeBid($amount, $this->user);
+        $this->auctionHelper->placeBid($amount);
     }
 
     /**
@@ -184,7 +184,7 @@ class FeatureContext extends BehatContext
      */
     public function iAmAnAnonymousUser()
     {
-        $this->user = null;
+        $this->userHelper->iAmAnonymous();
     }
 
     /**
@@ -203,4 +203,22 @@ class FeatureContext extends BehatContext
     {
         $this->userHelper->assertUserCreated($userId);
     }
+
+    /**
+     * @When /^I login$/
+     */
+    public function iLogin()
+    {
+        $this->userHelper->login();
+    }
+
+    /**
+     * @Then /^I should be logged in$/
+     */
+    public function iShouldBeLoggedIn()
+    {
+        $this->userHelper->assertSuccessfulLogin();
+    }
+
+
 }

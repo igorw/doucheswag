@@ -1,0 +1,35 @@
+<?php
+
+namespace Douche\Interactor;
+
+use Douche\View\UserView;
+use Douche\Entity\UserRepository;
+use Douche\Exception\IncorrectPasswordException;
+use Douche\Exception\UserNotFoundException;
+
+class UserLogin 
+{
+    private $userRepo;
+    private $passwordEncoder;
+
+    public function __construct(UserRepository $userRepo, PasswordEncoder $passwordEncoder)
+    {
+        $this->userRepo = $userRepo;
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
+    public function __invoke(UserLoginRequest $request)
+    {
+        $user = $this->userRepo->findOneByEmail($request->email);
+
+        if (!$user) {
+            throw new UserNotFoundException();
+        }
+
+        if (!$this->passwordEncoder->isPasswordValid($user->getPasswordHash(), $request->password)) {
+            throw new IncorrectPasswordException();
+        }
+
+        return new UserLoginResponse(UserView::fromUser($user));
+    }    
+}
