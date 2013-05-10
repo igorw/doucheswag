@@ -7,7 +7,7 @@ use Douche\Entity\User;
 class UserRepositoryTest extends \PHPUnit_Framework_TestCase
 {
     /** @test */
-    public function findOnEmptyRepoShouldThrowUserNotFound()
+    public function findOnEmptyRepoShouldReturnNull()
     {
         $repo = new UserRepository(__DIR__.'/Fixtures/non_existent.json');
         $user = $repo->find('missing');
@@ -16,7 +16,7 @@ class UserRepositoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
-    public function findShouldThrowOnMissingUser()
+    public function findShouldReturnNullOnMissingUser()
     {
         $repo = new UserRepository(__DIR__.'/Fixtures/users.json');
         $user = $repo->find('missing');
@@ -35,7 +35,7 @@ class UserRepositoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
-    public function findOneByEmailShouldThrowOnMissingUser()
+    public function findOneByEmailShouldReturnNullOnMissingUser()
     {
         $repo = new UserRepository(__DIR__.'/Fixtures/users.json');
         $user = $repo->findOneByEmail('john.doe@example.com');
