@@ -1,0 +1,14 @@
+[
+    {
+        "id": "igorw",
+        "name": "Igor Wiedler",
+        "email": "igor@wiedler.ch",
+        "passwordHash": "FOOBAR"
+    },
+    {
+        "id": "davedevelopment",
+        "name": "Dave Marshall",
+        "email": "dave.marshall@atstsolutions.co.uk",
+        "passwordHash": "FOO"
+    }
+]
