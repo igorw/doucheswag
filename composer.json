@@ -2,15 +2,22 @@
     "require-dev": {
         "behat/behat": "2.4.*",
         "phpunit/phpunit": "3.7.*",
-        "phake/phake": "2.0.x-dev"
+        "phake/phake": "2.0.x-dev",
+        "doctrine/dbal": "~2.3"
     },
     "autoload": {
-        "psr-0": { "Douche": "src" }
+        "psr-0": { 
+            "Douche": "src", 
+            "tests\\integration\\Douche": "./" 
+        }
     },
     "config": {
         "bin-dir": "bin/"
     },
     "require": {
         "mathiasverraes/money": "1.2.*"
+    },
+    "suggest": {
+        "doctrine/dbal": "~2.3"
     }
 }
