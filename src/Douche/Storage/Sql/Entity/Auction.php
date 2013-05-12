@@ -12,4 +12,9 @@ class Auction extends BaseAuction
     {
         $this->bids[] = [$bidder, $bid];
     }
+
+    public function getBids()
+    {
+        return $this->bids;
+    }
 }

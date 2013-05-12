@@ -29,6 +29,8 @@ class AuctionRepository
 
     protected $conn;
     protected $userRepo;
+    protected $identityMap = [];
+    protected $originalData = [];
 
     public function __construct(Connection $conn, UserRepository $userRepo)
     {
@@ -48,6 +50,10 @@ class AuctionRepository
 
     public function find($id) 
     {
+        if (isset($this->identityMap[$id])) {
+            return $this->identityMap[$id];
+        }
+
         $rows = $this->conn->fetchAll(static::SELECT_SQL . " WHERE a.id = ?", [$id]);
 
         if (empty($rows)) {
@@ -57,34 +63,79 @@ class AuctionRepository
         return reset($this->rowsToAuctions($rows));
     }
 
-    protected function rowsToAuctions($rows)
+    public function save()
     {
-        /* this could be pulled out into a seperate class and tested in isolation */
-        $auctions = array();
-
-        foreach($rows as $row) {
-
-            $id = $row['id'];
-
-            if (!isset($auctions[$id])) {
-                $auctions[$id] = new Entity\Auction(
-                    $id,
-                    $row['name'], 
-                    new \DateTime($row['ending_at']),
-                    new Currency($row['currency'])
-                );
+        foreach ($this->identityMap as $id => $auction) {
+            if (count($this->originalData[$id]) === count($auction->getBids())) {
+                continue;
             }
 
-            if (!empty($row['bid_id'])) {
-                $amount = new Money((int) $row['bid_amount'], new Currency($row['bid_currency']));
-                $originalAmount = new Money((int) $row['bid_original_amount'], new Currency($row['bid_original_currency']));
+            $this->conn->transactional(function() use ($auction) {
 
-                $bid = new Bid($amount, $originalAmount);
+                $this->conn->delete('auction_bids', ['auction_id' => $auction->getId()]);
 
-                /* could look to proxy this */
-                $bidder = $this->userRepo->find($row['bid_user_id']);
+                foreach ($auction->getBids() as $tuple) {
+                    list($bidder, $bid) = $tuple;
 
-                $auctions[$id]->addBid($bidder, $bid);
+                    $this->conn->insert('auction_bids', [
+                        'auction_id' => $auction->getId(),
+                        'user_id' => $bidder->getId(),
+                        'amount' => $bid->getAmount()->getAmount(),
+                        'currency' => $bid->getAmount()->getCurrency(),
+                        'original_amount' => $bid->getOriginalAmount()->getAmount(),
+                        'original_currency' => $bid->getOriginalAmount()->getCurrency(),
+                    ]);
+
+                }
+
+            });
+        }
+    }
+
+    protected function rowsToAuctions($rows)
+    {
+        $groupedRows = [];
+        $auctions = [];
+
+        foreach($rows as $row) {
+            if (!isset($groupedRows[$row['id']])) {
+                $groupedRows[$row['id']] = [];
+            }
+
+            $groupedRows[$row['id']][] = $row;
+        }
+
+        foreach ($groupedRows as $id => $rows) {
+
+            if (isset($this->identityMap[$id])) {
+                $auctions[] = $this->identityMap[$id];
+                continue;
+            }
+
+            $row = reset($rows);
+            $auction = new Entity\Auction(
+                $id,
+                $row['name'], 
+                new \DateTime($row['ending_at']),
+                new Currency($row['currency'])
+            );
+
+            $this->identityMap[$id] = $auction;
+            $this->originalData[$id] = $rows;
+            $auctions[] = $auction;
+
+            foreach ($rows as $row) {
+                if (!empty($row['bid_id'])) {
+                    $amount = new Money((int) $row['bid_amount'], new Currency($row['bid_currency']));
+                    $originalAmount = new Money((int) $row['bid_original_amount'], new Currency($row['bid_original_currency']));
+
+                    $bid = new Bid($amount, $originalAmount);
+
+                    /* could look to proxy this */
+                    $bidder = $this->userRepo->find($row['bid_user_id']);
+
+                    $auction->addBid($bidder, $bid);
+                }
             }
         }
 

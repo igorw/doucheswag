@@ -5,6 +5,8 @@ namespace tests\integration\Douche\Storage\Sql;
 use Douche\Storage\Sql\AuctionRepository;
 use Douche\Repository\UserArrayRepository;
 use Douche\Entity\User;
+use Douche\Value\Bid;
+use Money\Money;
 use Money\Currency;
 
 class AuctionRepositoryTest extends SqlTestCase
@@ -76,6 +78,48 @@ class AuctionRepositoryTest extends SqlTestCase
         $bidder = $auction->getHighestBidder();
         $this->assertInstanceOf("Douche\Entity\User", $bidder);
         $this->assertEquals($userId, $bidder->getId());
+    }
+
+    /**
+     * @test
+     */
+    public function saveShouldInsertAnyNewBids()
+    {
+        $id = $this->createAuction([
+            'bids' => [
+                [
+                    'amount' => 200,
+                    'currency' => 'GBP',
+                    'original_amount' => 600,
+                    'original_currency' => 'USD',
+                ],
+            ]
+        ]);
+
+        $auction = $this->repo->find($id);
+
+        $userId = $this->createUser();
+        $user = $this->userRepo->find($userId);
+
+        $auction->bid($user, new Bid(
+            new Money(300, new Currency('GBP')), 
+            new Money(900, new Currency('USD'))
+        ));
+
+        $this->repo->save();
+
+        $expected = [
+            'user_id' => $userId,
+            'amount' => '300',
+            'currency' => 'GBP',
+            'original_amount' => '900',
+            'original_currency' => 'USD',
+        ];
+        
+        $bids =  $this->conn->fetchAll("SELECT user_id, amount, currency, original_amount, original_currency FROM auction_bids WHERE auction_id = ? ORDER BY amount ASC", [$id]);
+
+        $this->assertEquals(2, count($bids));
+        $this->assertEquals($expected, $bids[1]);
     }
 
     /** @test */
