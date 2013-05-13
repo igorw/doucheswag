@@ -5,7 +5,7 @@ namespace Douche\Storage\Sql;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
 
-class Util 
+class Util
 {
     public static function createAuctionSchema(Connection $conn)
     {
@@ -39,5 +39,4 @@ class Util
 
         return $schema;
     }
-    
 }

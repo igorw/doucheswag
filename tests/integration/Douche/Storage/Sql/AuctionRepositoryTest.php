@@ -38,7 +38,7 @@ class AuctionRepositoryTest extends SqlTestCase
         $this->assertEquals($id, $auction->getId());
         $this->assertEquals('Dave', $auction->getName());
         $this->assertEquals(new Currency('GBP'), $auction->getCurrency());
-    }  
+    }
 
     /** @test */
     public function findShouldJoinBids()
@@ -74,15 +74,13 @@ class AuctionRepositoryTest extends SqlTestCase
         $this->assertInstanceOf("Douche\Value\Bid", $bid);
         $this->assertEquals(300, $bid->getAmount()->getAmount());
         $this->assertEquals(new Currency('GBP'), $bid->getAmount()->getCurrency());
-        
+
         $bidder = $auction->getHighestBidder();
         $this->assertInstanceOf("Douche\Entity\User", $bidder);
         $this->assertEquals($userId, $bidder->getId());
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function saveShouldInsertAnyNewBids()
     {
         $id = $this->createAuction([
@@ -102,7 +100,7 @@ class AuctionRepositoryTest extends SqlTestCase
         $user = $this->userRepo->find($userId);
 
         $auction->bid($user, new Bid(
-            new Money(300, new Currency('GBP')), 
+            new Money(300, new Currency('GBP')),
             new Money(900, new Currency('USD'))
         ));
 
@@ -115,7 +113,7 @@ class AuctionRepositoryTest extends SqlTestCase
             'original_amount' => '900',
             'original_currency' => 'USD',
         ];
-        
+
         $bids =  $this->conn->fetchAll("SELECT user_id, amount, currency, original_amount, original_currency FROM auction_bids WHERE auction_id = ? ORDER BY amount ASC", [$id]);
 
         $this->assertEquals(2, count($bids));
@@ -180,7 +178,7 @@ class AuctionRepositoryTest extends SqlTestCase
         foreach ($bids as $bid) {
             if (!isset($bid['user_id'])) {
                 $bid['user_id'] = $this->createUser();
-            }            
+            }
 
             $bid['auction_id'] = $id;
 
@@ -202,4 +200,3 @@ class AuctionRepositoryTest extends SqlTestCase
         return $id;
     }
 }
-

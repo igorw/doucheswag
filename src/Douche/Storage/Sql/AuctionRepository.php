@@ -9,10 +9,10 @@ use Douche\Value\Bid;
 use Money\Money;
 use Money\Currency;
 
-class AuctionRepository 
+class AuctionRepository
 {
     const SELECT_SQL = "
-            SELECT      
+            SELECT
                 a.id as id,
                 a.name as name,
                 a.ending_at as ending_at,
@@ -48,7 +48,7 @@ class AuctionRepository
         return $this->rowsToAuctions($rows);
     }
 
-    public function find($id) 
+    public function find($id)
     {
         if (isset($this->identityMap[$id])) {
             return $this->identityMap[$id];
@@ -115,7 +115,7 @@ class AuctionRepository
             $row = reset($rows);
             $auction = new Entity\Auction(
                 $id,
-                $row['name'], 
+                $row['name'],
                 new \DateTime($row['ending_at']),
                 new Currency($row['currency'])
             );
