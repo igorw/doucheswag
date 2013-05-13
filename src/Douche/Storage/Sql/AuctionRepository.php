@@ -60,7 +60,8 @@ class AuctionRepository
             return null;
         }
 
-        return reset($this->rowsToAuctions($rows));
+        $_ = $this->rowsToAuctions($rows);
+        return reset($_);
     }
 
     public function save()
