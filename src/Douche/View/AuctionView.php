@@ -4,6 +4,7 @@ namespace Douche\View;
 
 class AuctionView
 {
+    public $id;
     public $name;
     public $highestBid;
     public $highestBidder;

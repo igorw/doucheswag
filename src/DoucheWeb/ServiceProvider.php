@@ -5,6 +5,7 @@ namespace DoucheWeb;
 use Douche\Storage\Sql\AuctionRepository;
 use Douche\Storage\File\UserRepository;
 use Douche\Interactor\AuctionList;
+use Douche\Interactor\AuctionView;
 
 use Silex\Application;
 use Silex\ServiceProviderInterface;
@@ -32,6 +33,10 @@ class ServiceProvider implements ServiceProviderInterface
 
         $app['interactor.auction_list'] = $app->share(function ($app) {
             return new AuctionList($app['douche.auction_repo']);
+        });
+
+        $app['interactor.auction_view'] = $app->share(function ($app) {
+            return new AuctionView($app['douche.auction_repo']);
         });
     }
 

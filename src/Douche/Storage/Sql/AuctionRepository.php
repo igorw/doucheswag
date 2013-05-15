@@ -86,9 +86,7 @@ class AuctionRepository implements AuctionRepositoryInterface
                         'original_amount' => $bid->getOriginalAmount()->getAmount(),
                         'original_currency' => $bid->getOriginalAmount()->getCurrency(),
                     ]);
-
                 }
-
             });
         }
     }

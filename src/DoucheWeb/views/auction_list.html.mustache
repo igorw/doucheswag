@@ -1,0 +1,18 @@
+<h1>Listing auctions</h1>
+
+<table>
+<thead>
+    <th>Name</th>
+    <th>Highest bid</th>
+    <th>Highest bidder</th>
+</thead>
+<tbody>
+{{# auctions }}
+    <tr>
+        <td><a href="/auction/{{ id }}">{{ name }}</a></td>
+        <td>{{ highestBid }}</td>
+        <td>{{ highestBidder }}</td>
+    </tr>
+{{/ auctions }}
+</tbody>
+</table>

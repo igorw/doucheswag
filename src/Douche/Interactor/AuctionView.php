@@ -19,6 +19,7 @@ class AuctionView
         $auction = $this->repo->find($request->id);
 
         $view = new AuctionViewDto([
+            'id'            => $auction->getId(),
             'name'          => $auction->getName(),
             'highestBid'    => $auction->getHighestBid(),
             'highestBidder' => $auction->getHighestBidder()
