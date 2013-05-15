@@ -22,7 +22,11 @@
         "igorw/config-service-provider": "~1.2",
         "mathiasverraes/money": "1.2.*",
         "monolog/monolog": "~1.4",
-        "silex/silex": "~1.0"
+        "mustache/mustache": "~2.3",
+        "mustache/silex-provider": "~1.0",
+        "silex/silex": "~1.0",
+        "symfony/console": "~2.2",
+        "symfony/monolog-bridge": "~2.2"
     },
     "suggest": {
         "doctrine/dbal": "~2.3"

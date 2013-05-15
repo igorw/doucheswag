@@ -6,5 +6,6 @@
         "driver": "pdo_sqlite",
         "path": "%storage_path%/data.db"
     },
+    "mustache.path": "%template_path%",
     "douche.user_repo.file": "%storage_path%/users.json"
 }

@@ -26,6 +26,7 @@ class AuctionList
     public function createAuctionView(Auction $auction)
     {
         return new AuctionView([
+            'id'   => $auction->getId(),
             'name' => $auction->getName(),
         ]);
     }

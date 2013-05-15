@@ -10,6 +10,7 @@ require __DIR__.'/../vendor/autoload.php';
 
 $app = require __DIR__.'/../src/DoucheWeb/app.php';
 $app->register(new Igorw\Silex\ConfigServiceProvider(__DIR__."/../config/$env.json", [
-    'storage_path' => __DIR__.'/../storage',
+    'storage_path'  => __DIR__.'/../storage',
+    'template_path' => __DIR__.'/../src/DoucheWeb/views',
 ]));
 $app->run();
