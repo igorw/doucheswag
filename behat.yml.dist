@@ -1,0 +1,9 @@
+default:
+    context:
+        parameters:
+            boundary: app
+
+end-to-end:
+    context:
+        parameters:
+            boundary: http
