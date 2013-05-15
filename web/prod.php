@@ -1,6 +1,4 @@
 <?php
 
-require __DIR__.'/../vendor/autoload.php';
-
-$app = require __DIR__.'/../src/DoucheWeb/app.php';
-$app->run();
+$env = 'prod';
+require __DIR__.'/front.php';

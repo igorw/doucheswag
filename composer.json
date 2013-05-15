@@ -16,6 +16,8 @@
         "bin-dir": "bin/"
     },
     "require": {
+        "php": ">5.4.0",
+        "igorw/config-service-provider": "~1.2",
         "mathiasverraes/money": "1.2.*",
         "silex/silex": "~1.0"
     },

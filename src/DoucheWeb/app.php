@@ -8,16 +8,9 @@ use Silex\Provider\ServiceControllerServiceProvider;
 
 $app = new Application();
 
-$app->register(new DoctrineServiceProvider(), [
-    'db.options' => [
-        'driver'    => 'pdo_sqlite',
-        'path'      => __DIR__.'/../../storage/data.db',
-    ],
-]);
+$app->register(new DoctrineServiceProvider());
 $app->register(new ServiceControllerServiceProvider());
-$app->register(new ServiceProvider(), [
-    'douche.user_repo.file' => __DIR__.'/../../storage/users.json',
-]);
+$app->register(new ServiceProvider());
 
 $app->get('/', 'interactor.auction_list:__invoke');
 
