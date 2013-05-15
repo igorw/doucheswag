@@ -6,16 +6,20 @@
         "doctrine/dbal": "~2.3"
     },
     "autoload": {
-        "psr-0": { 
-            "Douche": "src", 
-            "tests\\integration\\Douche": "./" 
+        "psr-0": {
+            "Douche": "src",
+            "DoucheWeb": "src",
+            "tests\\integration\\Douche": "./"
         }
     },
     "config": {
         "bin-dir": "bin/"
     },
     "require": {
-        "mathiasverraes/money": "1.2.*"
+        "php": ">5.4.0",
+        "igorw/config-service-provider": "~1.2",
+        "mathiasverraes/money": "1.2.*",
+        "silex/silex": "~1.0"
     },
     "suggest": {
         "doctrine/dbal": "~2.3"

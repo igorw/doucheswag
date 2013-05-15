@@ -1,0 +1,8 @@
+{
+    "debug": true,
+    "db.options": {
+        "driver": "pdo_sqlite",
+        "path": "%storage_path%/data.db"
+    },
+    "douche.user_repo.file": "%storage_path%/users.json"
+}

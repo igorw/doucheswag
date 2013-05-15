@@ -9,7 +9,7 @@ use Douche\Value\Bid;
 use Money\Money;
 use Money\Currency;
 
-class AuctionRepository
+class AuctionRepository implements AuctionRepositoryInterface
 {
     const SELECT_SQL = "
             SELECT
