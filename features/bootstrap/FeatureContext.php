@@ -7,6 +7,11 @@ use Behat\Behat\Context\ClosuredContextInterface,
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
 
+use Symfony\Component\HttpKernel\Client;
+use Behat\Mink\Mink;
+use Behat\Mink\Session;
+use Behat\Mink\Driver\BrowserKitDriver;
+
 use Douche\Entity\Auction;
 use Douche\Entity\User;
 use Douche\Interactor\AuctionList;
@@ -16,13 +21,30 @@ use Douche\Repository\UserArrayRepository;
 use Douche\View\AuctionView;
 
 require_once __DIR__ . '/AuctionHelper.php';
+require_once __DIR__ . '/EndToEndAuctionHelper.php';
 
 require_once 'vendor/phpunit/phpunit/PHPUnit/Framework/Assert/Functions.php';
 
 class FeatureContext extends BehatContext
 {
+    protected $parameters;
+
     public function __construct(array $parameters)
     {
+        $this->parameters = $parameters;
+    }
+
+    /**
+     * @BeforeScenario
+     */
+    public function bootstrapHelpers($event)
+    {
+        $node = $event instanceof OutlineEvent ? $event->getOutline() : $event->getScenario();
+
+        if ($this->parameters['boundary'] == 'http' && $node->hasTag('end-to-end-available')) {
+            return $this->bootstrapEndToEndHelpers();
+        }
+
         $this->users = [
             'igorw' => new User('igorw', 'Igor Wiedler', 'igor@wiedler.ch', 'BAR'),
         ];
@@ -40,6 +62,28 @@ class FeatureContext extends BehatContext
 
         $this->userHelper    = new UserHelper($this->userRepository);
         $this->auctionHelper = new AuctionHelper($this->userHelper);
+    }
+
+    protected function bootstrapEndToEndHelpers()
+    {
+        $app = require __DIR__."/../../src/DoucheWeb/app.php";
+
+        $app->register(new Igorw\Silex\ConfigServiceProvider(__DIR__."/../../config/test.json", [
+            'storage_path' => __DIR__.'/../../storage',
+        ]));
+
+        $mink = new Mink(array(
+            'browserkit' => new Session(new BrowserKitDriver(new Client($app))),
+        ));
+
+        $mink->setDefaultSessionName('browserkit');
+
+        if (isset($app['db']->getParams()['memory'])) {
+            \Douche\Storage\Sql\Util::createAuctionSchema($app['db']);
+        }
+
+        $this->userHelper    = new UserHelper($app['douche.user_repo']);
+        $this->auctionHelper = new EndToEndAuctionHelper($this->userHelper, $app['db'], $mink);
     }
 
     /**
