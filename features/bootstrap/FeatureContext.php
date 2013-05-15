@@ -71,6 +71,7 @@ class FeatureContext extends BehatContext
 
         $app->register(new Igorw\Silex\ConfigServiceProvider(__DIR__."/../../config/test.json", [
             'storage_path' => __DIR__.'/../../storage',
+            'template_path' => __DIR__.'/../../src/DoucheWeb/views',
         ]));
 
         $mink = new Mink(array(
