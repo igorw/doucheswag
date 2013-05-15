@@ -3,7 +3,9 @@
         "behat/behat": "2.4.*",
         "phpunit/phpunit": "3.7.*",
         "phake/phake": "2.0.x-dev",
-        "doctrine/dbal": "~2.3"
+        "doctrine/dbal": "~2.3",
+        "behat/mink": "~1.5",
+        "behat/mink-browserkit-driver": "~1.1"
     },
     "autoload": {
         "psr-0": {
