@@ -42,7 +42,8 @@ class FeatureContext extends BehatContext
         $node = $event instanceof OutlineEvent ? $event->getOutline() : $event->getScenario();
 
         if ($this->parameters['boundary'] == 'http' && $node->hasTag('end-to-end-available')) {
-            return $this->bootstrapEndToEndHelpers();
+            $this->bootstrapEndToEndHelpers();
+            return;
         }
 
         $this->users = [
@@ -263,6 +264,4 @@ class FeatureContext extends BehatContext
     {
         $this->userHelper->assertSuccessfulLogin();
     }
-
-
 }
