@@ -1,0 +1,9 @@
+{
+    "session.test": true,
+    "debug": true,
+    "db.options": {
+        "driver": "pdo_sqlite",
+        "memory": true
+    },
+    "douche.user_repo.file": "%storage_path%/users_test.json"
+}

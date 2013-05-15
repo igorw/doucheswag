@@ -1,6 +1,7 @@
 test:
 	bin/phpunit
 	bin/behat
+	bin/behat -p end-to-end
 
 init:
 	mkdir -p storage
