@@ -21,6 +21,7 @@
         "php": ">5.4.0",
         "igorw/config-service-provider": "~1.2",
         "mathiasverraes/money": "1.2.*",
+        "monolog/monolog": "~1.4",
         "silex/silex": "~1.0"
     },
     "suggest": {

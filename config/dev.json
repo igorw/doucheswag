@@ -1,5 +1,7 @@
 {
     "debug": true,
+    "monolog.name": "douche",
+    "monolog.logfile": "php://stdout",
     "db.options": {
         "driver": "pdo_sqlite",
         "path": "%storage_path%/data.db"
