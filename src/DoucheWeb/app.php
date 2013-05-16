@@ -7,6 +7,7 @@ use Douche\Interactor\AuctionViewRequest;
 use Douche\Interactor\UserLoginRequest;
 use Douche\Interactor\UserLoginResponse;
 use Douche\Interactor\AuctionViewResponse;
+use Douche\Exception\Exception as DoucheException;
 
 use Mustache\Silex\Provider\MustacheServiceProvider;
 
@@ -15,6 +16,7 @@ use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\ServiceControllerServiceProvider;
 use Silex\Provider\SessionServiceProvider;
+use Silex\ExceptionListenerWrapper;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,12 +42,33 @@ $app->get('/auction/{id}', 'interactor.auction_view')
     });
 
 $app->post('/login', 'interactor.user_login')
+    ->value('controller', 'login')
     ->convert('request', function ($_, Request $request) {
         return new UserLoginRequest($request->request->all());
     });
 
+// TODO change to ->on once fabpot/silex#705 is merged
+$app['dispatcher'] = $app->share($app->extend('dispatcher', function ($dispatcher, $app) {
+    $dispatcher->addListener(KernelEvents::EXCEPTION, new ExceptionListenerWrapper($app, function (DoucheException $e, $code) use ($app) {
+        $controller = $app['request']->attributes->get('controller');
+
+        if ($controller == 'login') {
+            return [
+                'errors' => ['Invalid Credentials'],
+            ];
+        }
+
+    }), -8);
+
+    return $dispatcher;
+}));
+
 $app->get('/login', function(Request $request, Application $app) {
-    return $app['mustache']->render('login.html.mustache', []);
+    $view = [
+        'errors' => [],
+    ];
+
+    return $app['mustache']->render('login.html.mustache', $view);
 });
 
 $app->get('/logout', function(Request $request, Application $app) {
