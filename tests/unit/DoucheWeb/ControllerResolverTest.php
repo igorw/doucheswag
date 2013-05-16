@@ -4,30 +4,29 @@ namespace tests\unit\DoucheWeb;
 
 use Phake;
 use DoucheWeb\ControllerResolver;
-use Silex\Application;
+use Pimple;
 use Symfony\Component\HttpFoundation\Request;
 
 class ControllerResolverTest extends \PHPUnit_Framework_TestCase
 {
-
     public function setUp()
     {
         $this->decoratedResolver = Phake::mock("Symfony\Component\HttpKernel\Controller\ControllerResolverInterface");
-        $this->app = new Application();
-        $this->resolver = new ControllerResolver($this->decoratedResolver, $this->app);
+        $this->container = new Pimple();
+        $this->resolver = new ControllerResolver($this->decoratedResolver, $this->container);
     }
 
     /** @test */
     public function getControllerShouldReturnService()
     {
-        $this->app['my_callable_controller'] = $this->app->protect(function () {});
+        $this->container['my_callable_controller'] = $this->container->protect(function () {});
 
         $request = Request::create("/");
         $request->attributes->set('_controller', "my_callable_controller");
 
         $controller = $this->resolver->getController($request);
 
-        $this->assertSame($this->app['my_callable_controller'], $controller);
+        $this->assertSame($this->container['my_callable_controller'], $controller);
     }
 
     /** @test */
@@ -59,7 +58,7 @@ class ControllerResolverTest extends \PHPUnit_Framework_TestCase
      */
     public function getControllerShouldThrowIfServiceNotCallable()
     {
-        $this->app['my_string'] = "dave";
+        $this->container['my_string'] = "dave";
 
         $request = Request::create("/");
         $request->attributes->set('_controller', "my_string");
