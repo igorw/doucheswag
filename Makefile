@@ -6,8 +6,8 @@ test:
 init:
 	mkdir -p storage
 	touch storage/data.db
-	php src/DoucheWeb/console.php init
-	php src/DoucheWeb/console.php sql "INSERT INTO auctions (id, name, ending_at, currency) VALUES (null, 'YOLO glasses', '2013-06-02', 'GBP')"
+	php src/DoucheConsole/console.php init
+	php src/DoucheConsole/console.php sql "INSERT INTO auctions (id, name, ending_at, currency) VALUES (null, 'YOLO glasses', '2013-06-02', 'GBP')"
 
 web: .PHONY
 	php -S localhost:8080 -t web web/dev.php
