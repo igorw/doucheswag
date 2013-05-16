@@ -45,6 +45,10 @@ $app['dispatcher'] = $app->share($app->extend('dispatcher', function ($dispatche
     $dispatcher->addListener(KernelEvents::VIEW, function ($event) use ($app) {
         $view = $event->getControllerResult();
 
+        if (is_null($view) || is_string($view)) {
+            return;
+        }
+
         $request = $event->getRequest();
         $controller = $request->attributes->get('controller');
         $template = "$controller.html";
