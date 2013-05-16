@@ -48,6 +48,12 @@ $app->get('/login', function(Request $request, Application $app) {
     return $app['mustache']->render('login.html.mustache', []);
 });
 
+$app->get('/logout', function(Request $request, Application $app) {
+    $request->getSession()->start();
+    $request->getSession()->invalidate();
+    return $app->redirect("/");
+});
+
 $app['resolver'] = $app->share($app->extend('resolver', function ($resolver, $app) {
     $resolver = new ControllerResolver($resolver, $app);
 
@@ -79,7 +85,7 @@ $app['dispatcher'] = $app->share($app->extend('dispatcher', function ($dispatche
         $app['mustache']->addHelper('login_menu', function () use ($request) {
 
             if ($request->getSession()->get('current_user')) {
-                return "Logged in as {{current_user.id}}";
+                return "Logged in as {{current_user.id}} <a href=/logout>[logout]</a>";
             }
 
             return "<a href=/login>Login</a>";
