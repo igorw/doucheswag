@@ -25,14 +25,20 @@ $app->register(new MustacheServiceProvider());
 $app->register(new ServiceControllerServiceProvider());
 $app->register(new ServiceProvider());
 
-$app->get('/', 'interactor.auction_list:__invoke')
+$app->get('/', 'interactor.auction_list')
     ->value('controller', 'auction_list');
 
-$app->get('/auction/{id}', 'interactor.auction_view:__invoke')
+$app->get('/auction/{id}', 'interactor.auction_view')
     ->value('controller', 'auction_view')
     ->convert('request', function ($_, Request $request) {
         return new AuctionViewRequest($request->attributes->get('id'));
     });
+
+$app['resolver'] = $app->share($app->extend('resolver', function ($resolver, $app) {
+    $resolver = new ControllerResolver($resolver, $app);
+
+    return $resolver;
+}));
 
 // TODO change to ->on once fabpot/silex#705 is merged
 $app['dispatcher'] = $app->share($app->extend('dispatcher', function ($dispatcher, $app) {
