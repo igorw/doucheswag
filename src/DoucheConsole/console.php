@@ -17,7 +17,7 @@ require __DIR__.'/../../vendor/autoload.php';
 $replacements = [
     'storage_path'  => __DIR__.'/../../storage',
     'template_path' => __DIR__.'/../../src/DoucheWeb/views',
-    ];
+];
 
 $env = getenv("DOUCHE_ENV") ?: "dev";
 
