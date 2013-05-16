@@ -105,15 +105,6 @@ $app['dispatcher'] = $app->share($app->extend('dispatcher', function ($dispatche
 
         $app['mustache']->addHelper('current_user', $request->getSession()->get('current_user'));
 
-        $app['mustache']->addHelper('login_menu', function () use ($request) {
-
-            if ($request->getSession()->get('current_user')) {
-                return "Logged in as {{current_user.id}} <a href=/logout>[logout]</a>";
-            }
-
-            return "<a href=/login>Login</a>";
-        });
-
         $body = $app['mustache']->render($template, $view);
         $response = new Response($body);
         $event->setResponse($response);
