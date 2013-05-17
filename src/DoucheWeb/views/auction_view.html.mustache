@@ -1,5 +1,7 @@
 <h1>{{ auction.name }}</h1>
 
+{{> _user_menu.html }}
+
 {{# auction.highestBid }}
     <p>Highest bid: {{ . }}</p>
 {{/ auction.highestBid }}
