@@ -43,6 +43,10 @@ $app->get('/auction/{id}', 'interactor.auction_view')
 
 $app->post('/login', 'interactor.user_login')
     ->value('controller', 'login')
+    ->value('success_handler', function ($view, $request) {
+        $request->getSession()->set('current_user', $view->user);
+        return new RedirectResponse("/");
+    })
     ->value('error_handlers', [
         "\Douche\Exception\UserNotFoundException" => function () {
             return ['errors' => ['Invalid Credentials']];
@@ -78,6 +82,8 @@ $app['resolver'] = $app->share($app->extend('resolver', function ($resolver, $ap
 // TODO change to ->error once fabpot/silex#705 is merged
 $app['dispatcher'] = $app->share($app->extend('dispatcher', function ($dispatcher, $app) {
     $dispatcher->addListener(KernelEvents::EXCEPTION, new ExceptionListenerWrapper($app, function (DoucheException $e, $code) use ($app) {
+        $app['request']->attributes->set('failed', true);
+
         $errorHandlers = $app['request']->attributes->get('error_handlers', []);
 
         foreach ($errorHandlers as $type => $handler) {
@@ -102,10 +108,14 @@ $app['dispatcher'] = $app->share($app->extend('dispatcher', function ($dispatche
 
         $request = $event->getRequest();
 
-        if ($view instanceof UserLoginResponse) {
-            $request->getSession()->set('current_user', $view->user);
-            $event->setResponse(new RedirectResponse("/"));
-            return;
+        if (!$request->attributes->get('failed') && $request->attributes->has('success_handler')) {
+            $handler = $request->attributes->get('success_handler');
+
+            $view = $handler($view, $request);
+            if ($view instanceof Response) {
+                $event->setResponse($view);
+                return;
+            }
         }
 
         $controller = $request->attributes->get('controller');
