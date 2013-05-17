@@ -1,10 +1,10 @@
 <div>
     {{# current_user }}
-    Logged in as {{id}} <a href=/logout>[logout]</a>
+    Logged in as {{id}} <a href="/logout">[logout]</a>
     {{/ current_user }}
 
     {{^ current_user }}
-    <a href=/login>Login</a>
+    <a href="/login">Login</a>
     {{/ current_user }}
 </div>
 
