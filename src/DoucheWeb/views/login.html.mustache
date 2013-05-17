@@ -1,0 +1,11 @@
+<h1>Login</h1>
+
+{{# errors }}
+<div>{{ . }}</div>
+{{/ errors }}
+
+<form method="POST" action="">
+    <label>Email: <input type="text" name="email" value=""/></label>
+    <label>Password: <input type="password" name="password" /></label>
+    <input type="submit" value="Login" />
+</form>
