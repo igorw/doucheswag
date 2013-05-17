@@ -55,22 +55,6 @@ $app->post('/login', 'interactor.user_login')
         return new UserLoginRequest($request->request->all());
     });
 
-// TODO change to ->on once fabpot/silex#705 is merged
-$app['dispatcher'] = $app->share($app->extend('dispatcher', function ($dispatcher, $app) {
-    $dispatcher->addListener(KernelEvents::EXCEPTION, new ExceptionListenerWrapper($app, function (DoucheException $e, $code) use ($app) {
-        $errorHandlers = $app['request']->attributes->get('error_handlers', []);
-
-        foreach ($errorHandlers as $type => $handler) {
-            if ($e instanceof $type) {
-                return $handler($e, $code, $app['request']);
-            }
-        }
-
-    }), -8);
-
-    return $dispatcher;
-}));
-
 $app->get('/login', function(Request $request, Application $app) {
     $view = [
         'errors' => [],
@@ -89,6 +73,22 @@ $app['resolver'] = $app->share($app->extend('resolver', function ($resolver, $ap
     $resolver = new ControllerResolver($resolver, $app);
 
     return $resolver;
+}));
+
+// TODO change to ->error once fabpot/silex#705 is merged
+$app['dispatcher'] = $app->share($app->extend('dispatcher', function ($dispatcher, $app) {
+    $dispatcher->addListener(KernelEvents::EXCEPTION, new ExceptionListenerWrapper($app, function (DoucheException $e, $code) use ($app) {
+        $errorHandlers = $app['request']->attributes->get('error_handlers', []);
+
+        foreach ($errorHandlers as $type => $handler) {
+            if ($e instanceof $type) {
+                return $handler($e, $code, $app['request']);
+            }
+        }
+
+    }), -8);
+
+    return $dispatcher;
 }));
 
 // TODO change to ->on once fabpot/silex#705 is merged
