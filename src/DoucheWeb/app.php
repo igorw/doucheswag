@@ -111,7 +111,8 @@ $app['dispatcher'] = $app->share($app->extend('dispatcher', function ($dispatche
         $controller = $request->attributes->get('controller');
         $template = "$controller.html";
 
-        $app['mustache']->addHelper('current_user', $request->getSession()->get('current_user'));
+        $view = (object) $view;
+        $view->current_user = $request->getSession()->get('current_user');
 
         $body = $app['mustache']->render($template, $view);
         $response = new Response($body);
