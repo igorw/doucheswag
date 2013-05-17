@@ -43,6 +43,14 @@ $app->get('/auction/{id}', 'interactor.auction_view')
 
 $app->post('/login', 'interactor.user_login')
     ->value('controller', 'login')
+    ->value('error_handlers', [
+        "\Douche\Exception\UserNotFoundException" => function () {
+            return ['errors' => ['Invalid Credentials']];
+        },
+        "Douche\Exception\IncorrectPasswordException" => function () {
+            return ['errors' => ['Invalid Credentials']];
+        },
+    ])
     ->convert('request', function ($_, Request $request) {
         return new UserLoginRequest($request->request->all());
     });
@@ -50,12 +58,12 @@ $app->post('/login', 'interactor.user_login')
 // TODO change to ->on once fabpot/silex#705 is merged
 $app['dispatcher'] = $app->share($app->extend('dispatcher', function ($dispatcher, $app) {
     $dispatcher->addListener(KernelEvents::EXCEPTION, new ExceptionListenerWrapper($app, function (DoucheException $e, $code) use ($app) {
-        $controller = $app['request']->attributes->get('controller');
+        $errorHandlers = $app['request']->attributes->get('error_handlers', []);
 
-        if ($controller == 'login') {
-            return [
-                'errors' => ['Invalid Credentials'],
-            ];
+        foreach ($errorHandlers as $type => $handler) {
+            if ($e instanceof $type) {
+                return $handler($e, $code, $app['request']);
+            }
         }
 
     }), -8);
