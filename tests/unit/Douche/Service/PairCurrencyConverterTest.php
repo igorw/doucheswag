@@ -46,4 +46,15 @@ class PairCurrencyConverterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(Money::USD(125), $usd);
     }
+
+    /** @test */
+    public function convertShouldConvertToSameCurrency()
+    {
+        $converter = new PairCurrencyConverter([]);
+
+        $eur = Money::EUR(100);
+        $converted = $converter->convert($eur, new Currency('EUR'));
+
+        $this->assertEquals(Money::EUR(100), $converted);
+    }
 }
