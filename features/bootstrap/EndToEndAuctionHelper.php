@@ -49,6 +49,33 @@ class EndToEndAuctionHelper
         $this->mink->assertSession()->pageTextContains($this->auctionName);
     }
 
+    public function placeBid($amount, Currency $currency = null)
+    {
+        $userId = $this->getUserHelper()->getCurrentUserId();
+
+        if ($userId == null) {
+            $userId = $this->getUserHelper()->createUser();
+        }
+
+        $page = $this->mink->getSession()->getPage();
+
+        $page->fillField('amount', $amount);
+
+        if ($currency) {
+            $page->selectOption('currency', $currency->getName());
+        }
+
+        $page->pressButton("Place Bid");
+    }
+
+    public function assertBidAccepted()
+    {
+        $this->assertAuctionPresent();
+        $this->mink->assertSession()->pageTextContains(
+            "Highest Bidder: " . $this->getUserHelper()->getCurrentUserId()
+        );
+    }
+
     protected function getUserHelper()
     {
         return $this->userHelper;

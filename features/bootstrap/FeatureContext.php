@@ -22,6 +22,8 @@ use Douche\View\AuctionView;
 
 require_once __DIR__ . '/AuctionHelper.php';
 require_once __DIR__ . '/EndToEndAuctionHelper.php';
+require_once __DIR__ . '/UserHelper.php';
+require_once __DIR__ . '/EndToEndUserHelper.php';
 
 require_once 'vendor/phpunit/phpunit/PHPUnit/Framework/Assert/Functions.php';
 
@@ -84,7 +86,7 @@ class FeatureContext extends BehatContext
             \Douche\Storage\Sql\Util::createAuctionSchema($app['db']);
         }
 
-        $this->userHelper    = new UserHelper($app['douche.user_repo']);
+        $this->userHelper    = new EndToEndUserHelper($app['douche.user_repo'], $mink);
         $this->auctionHelper = new EndToEndAuctionHelper($this->userHelper, $app['db'], $mink);
     }
 
@@ -251,7 +253,7 @@ class FeatureContext extends BehatContext
     }
 
     /**
-     * @When /^I login$/
+     * @When /^I (am logged in|login)$/
      */
     public function iLogin()
     {
