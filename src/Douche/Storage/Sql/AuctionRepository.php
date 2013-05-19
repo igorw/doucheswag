@@ -67,7 +67,7 @@ class AuctionRepository implements AuctionRepositoryInterface
     public function save()
     {
         foreach ($this->identityMap as $id => $auction) {
-            if (count($this->originalData[$id]) === count($auction->getBids())) {
+            if (count($this->originalData[$id]['bids']) === count($auction->getBids())) {
                 continue;
             }
 
@@ -120,7 +120,9 @@ class AuctionRepository implements AuctionRepositoryInterface
             );
 
             $this->identityMap[$id] = $auction;
-            $this->originalData[$id] = $rows;
+            $this->originalData[$id] = array(
+                'auction' => $rows
+            );
             $auctions[] = $auction;
 
             foreach ($rows as $row) {
@@ -136,6 +138,8 @@ class AuctionRepository implements AuctionRepositoryInterface
                     $auction->addBid($bidder, $bid);
                 }
             }
+
+            $this->originalData[$id]['bids'] = $auction->getBids();
         }
 
         return $auctions;
