@@ -7,10 +7,15 @@ use Douche\Storage\File\UserRepository;
 use Douche\Interactor\AuctionList;
 use Douche\Interactor\AuctionView;
 use Douche\Interactor\UserLogin;
+use Douche\Interactor\Bid;
+use Douche\Service\PairCurrencyConverter;
 use Douche\Service\UppercasePasswordEncoder;
 
 use Silex\Application;
 use Silex\ServiceProviderInterface;
+
+use Money\Currency;
+use Money\CurrencyPair;
 
 /**
  * External dependencies
@@ -37,6 +42,13 @@ class ServiceProvider implements ServiceProviderInterface
             return new UppercasePasswordEncoder;
         });
 
+        $app['douche.currency_converter'] = $app->share(function ($app) {
+            return new PairCurrencyConverter([
+                CurrencyPair::createFromIso('USD/GBP 0.5'),
+                CurrencyPair::createFromIso('GBP/USD 2.0'),
+            ]);
+        });
+
         $app['interactor.auction_list'] = $app->share(function ($app) {
             return new AuctionList($app['douche.auction_repo']);
         });
@@ -47,6 +59,10 @@ class ServiceProvider implements ServiceProviderInterface
 
         $app['interactor.user_login'] = $app->share(function ($app) {
             return new UserLogin($app['douche.user_repo'], $app['douche.password_encoder']);
+        });
+
+        $app['interactor.bid'] = $app->share(function ($app) {
+            return new Bid($app['douche.auction_repo'], $app['douche.user_repo'], $app['douche.currency_converter']);
         });
     }
 

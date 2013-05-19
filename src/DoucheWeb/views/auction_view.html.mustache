@@ -7,5 +7,16 @@
 {{/ auction.highestBid }}
 
 {{# auction.highestBidder }}
-    <p>Highest bid: {{ . }}</p>
+    <p>Highest bidder: {{ . }}</p>
 {{/ auction.highestBidder }}
+
+<form action="/auction/{{ auction.id }}/bids" method="POST">
+    <select name="currency">
+        <option value="USD">USD</option>
+        <option value="GBP">GBP</option>
+    </select>
+
+    <input type="number" name="amount" value="" />
+
+    <input type="submit" value="Place Bid" />
+</form>
