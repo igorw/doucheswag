@@ -35,7 +35,7 @@ $app->register(new MustacheServiceProvider(), [
     'mustache.options' => [
         'helpers' => [
             'money_amount' => function ($money) {
-                return $money->getAmount() / 100;
+                return $money->getCurrency().' '.($money->getAmount() / 100);
             },
         ],
     ],

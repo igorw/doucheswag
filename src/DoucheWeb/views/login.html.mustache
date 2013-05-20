@@ -1,11 +1,20 @@
+{{> _header.html }}
+
 <h1>Login</h1>
 
 {{# errors }}
-<div>{{ . }}</div>
+<div class="alert alert-error">
+    {{ . }}
+</div>
 {{/ errors }}
 
 <form method="POST" action="">
-    <label>Email: <input type="text" name="email" value=""/></label>
-    <label>Password: <input type="password" name="password" /></label>
-    <input type="submit" value="Login" />
+    <label>Email:</label>
+    <input type="text" name="email" value=""/>
+    <label>Password:</label>
+    <input type="password" name="password" />
+    <label></label>
+    <input type="submit" value="Login" class="btn" />
 </form>
+
+{{> _footer.html }}
