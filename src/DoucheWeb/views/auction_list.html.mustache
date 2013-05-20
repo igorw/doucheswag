@@ -1,3 +1,4 @@
+{{% FILTERS }}
 {{> _header.html }}
 
 {{%FILTERS}}
@@ -9,13 +10,15 @@
     <th>Name</th>
     <th>Highest bid</th>
     <th>Highest bidder</th>
+    <th>Ends</th>
 </thead>
 <tbody>
 {{# auctions }}
     <tr>
         <td><a href="/auction/{{ id }}">{{ name }}</a></td>
-        <td>{{ highestBid.getAmount | money_amount }}</td>
+        <td>{{# highestBid }}{{ highestBid.getAmount | format_money }}{{/ highestBid }}</td>
         <td>{{ highestBidder }}</td>
+        <td>{{ endingAt | format_date }}</td>
     </tr>
 {{/ auctions }}
 </tbody>

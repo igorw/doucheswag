@@ -38,6 +38,11 @@ class Auction
         return $this->currency;
     }
 
+    public function getEndingAt()
+    {
+        return $this->endingAt;
+    }
+
     public function bid(User $bidder, Bid $bid, \DateTime $now = null)
     {
         if (!$this->isRunning($now)) {
