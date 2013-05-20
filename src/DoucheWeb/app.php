@@ -63,6 +63,14 @@ $app->post('/auction/{id}/bids', 'interactor.bid')
     ->value('success_handler', function ($view, $request) {
         return new RedirectResponse("/auction/" . $request->attributes->get('id'));
     })
+    ->value('error_handlers', [
+        "Douche\Exception\BidTooLowException" => function ($e, $code, $request) {
+            $request->getSession()->getFlashBag()->set('errors', [
+                'The provided bid was too low.',
+            ]);
+            return new RedirectResponse("/auction/" . $request->attributes->get('id'));
+        },
+    ])
     ->convert('request', function ($_, Request $request) {
         return new BidRequest(
             $request->attributes->get('id'),
@@ -78,7 +86,7 @@ $app->post('/login', 'interactor.user_login')
         return new RedirectResponse("/");
     })
     ->value('error_handlers', [
-        "\Douche\Exception\UserNotFoundException" => function () {
+        "Douche\Exception\UserNotFoundException" => function () {
             return ['errors' => ['Invalid Credentials']];
         },
         "Douche\Exception\IncorrectPasswordException" => function () {
@@ -153,6 +161,7 @@ $app['dispatcher'] = $app->share($app->extend('dispatcher', function ($dispatche
 
         $view = (object) $view;
         $view->current_user = $request->getSession()->get('current_user');
+        $view->form_errors = $request->getSession()->getFlashBag()->get('errors');
 
         $body = $app['mustache']->render($template, $view);
         $response = new Response($body);
