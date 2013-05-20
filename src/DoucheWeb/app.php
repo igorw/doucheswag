@@ -37,6 +37,9 @@ $app->register(new MustacheServiceProvider(), [
             'money_amount' => function ($money) {
                 return $money->getCurrency().' '.($money->getAmount() / 100);
             },
+            'format_date' => function (\DateTime $date) {
+                return $date->format("Y-m-d H:i:s");
+            },
         ],
     ],
 ]);
