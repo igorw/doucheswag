@@ -11,6 +11,7 @@ class AuctionView
     public $highestBid;
     public $highestBidder;
     public $isRunning;
+    public $endingAt;
 
     public function __construct(array $attributes = array())
     {
@@ -29,6 +30,7 @@ class AuctionView
                                 ? $auction->getHighestBidder()->getId()
                                 : null,
             'isRunning'     => $auction->isRunning(),
+            'endingAt'      => $auction->getEndingAt(),
         ]);
     }
 }
