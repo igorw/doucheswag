@@ -1,5 +1,7 @@
 {{> _header.html }}
 
+{{%FILTERS}}
+
 <h1>Listing auctions</h1>
 
 <table class="table">
@@ -12,7 +14,7 @@
 {{# auctions }}
     <tr>
         <td><a href="/auction/{{ id }}">{{ name }}</a></td>
-        <td>{{ highestBid }}</td>
+        <td>{{ highestBid.getAmount | money_amount }}</td>
         <td>{{ highestBidder }}</td>
     </tr>
 {{/ auctions }}
