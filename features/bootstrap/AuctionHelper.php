@@ -119,6 +119,11 @@ class AuctionHelper
         assertInstanceOf("Douche\Exception\BidRejectedException", $this->response);
     }
 
+    public function assertBiddingNotOffered()
+    {
+        assertFalse($this->response->auction->isRunning);
+    }
+
     protected function getUserHelper()
     {
         return $this->userHelper;
