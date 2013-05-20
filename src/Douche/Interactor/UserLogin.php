@@ -7,7 +7,7 @@ use Douche\Entity\UserRepository;
 use Douche\Exception\IncorrectPasswordException;
 use Douche\Exception\UserNotFoundException;
 
-class UserLogin 
+class UserLogin
 {
     private $userRepo;
     private $passwordEncoder;
@@ -23,13 +23,13 @@ class UserLogin
         $user = $this->userRepo->findOneByEmail($request->email);
 
         if (!$user) {
-            throw new UserNotFoundException();
+            throw new UserNotFoundException($request->email);
         }
 
         if (!$this->passwordEncoder->isPasswordValid($user->getPasswordHash(), $request->password)) {
-            throw new IncorrectPasswordException();
+            throw new IncorrectPasswordException($request->email);
         }
 
         return new UserLoginResponse(UserView::fromUser($user));
-    }    
+    }
 }
