@@ -1,22 +1,37 @@
+{{%FILTERS}}
+
+{{> _header.html }}
+
 <h1>{{ auction.name }}</h1>
 
-{{> _user_menu.html }}
-
 {{# auction.highestBid }}
-    <p>Highest bid: {{ getAmount.getAmount }}</p>
+    <p>Highest bid: {{ getAmount | money_amount }}</p>
 {{/ auction.highestBid }}
 
 {{# auction.highestBidder }}
     <p>Highest bidder: {{ . }}</p>
 {{/ auction.highestBidder }}
 
-<form id="place_bid" action="/auction/{{ auction.id }}/bids" method="POST">
-    <select name="currency">
-        <option value="USD">USD</option>
-        <option value="GBP">GBP</option>
-    </select>
+{{# current_user }}
+    <form id="place_bid" action="/auction/{{ auction.id }}/bids" method="POST">
+        <label>Currency</label>
+        <select name="currency">
+            <option value="USD">USD</option>
+            <option value="GBP">GBP</option>
+        </select>
 
-    <input type="number" name="amount" value="" />
+        <label>Amount</label>
+        <input type="number" name="amount" value="" />
 
-    <input type="submit" value="Place Bid" />
-</form>
+        <label></label>
+        <input type="submit" value="Place Bid" />
+    </form>
+{{/ current_user }}
+
+{{^ current_user }}
+    <div class="alert">
+        In order to bid, please <a href="/login">log in</a>.
+    </div>
+{{/ current_user }}
+
+{{> _footer.html }}

@@ -31,7 +31,15 @@ $app = new Application();
 
 $app->register(new MonologServiceProvider());
 $app->register(new DoctrineServiceProvider());
-$app->register(new MustacheServiceProvider());
+$app->register(new MustacheServiceProvider(), [
+    'mustache.options' => [
+        'helpers' => [
+            'money_amount' => function ($money) {
+                return $money->getCurrency().' '.($money->getAmount() / 100);
+            },
+        ],
+    ],
+]);
 $app->register(new ServiceControllerServiceProvider());
 $app->register(new SessionServiceProvider());
 $app->register(new ServiceProvider());

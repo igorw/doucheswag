@@ -8,6 +8,7 @@ init:
 	touch storage/data.db
 	php src/DoucheWeb/console.php init
 	php src/DoucheWeb/console.php sql "INSERT INTO auctions (id, name, ending_at, currency) VALUES (null, 'YOLO glasses', '2013-06-02', 'GBP')"
+	php src/DoucheWeb/console.php create-user igorw "Igor Wiedler" "igor@wiedler.ch" "FOOBAR"
 
 web: .PHONY
 	php -S localhost:8080 -t web web/dev.php
