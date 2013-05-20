@@ -267,4 +267,12 @@ class FeatureContext extends BehatContext
     {
         $this->userHelper->assertSuccessfulLogin();
     }
+
+    /**
+     * @Then /^I should not be offered a chance to bid$/
+     */
+    public function iShouldNotBeOfferedAChanceToBid()
+    {
+        $this->auctionHelper->assertBiddingNotOffered();
+    }
 }
