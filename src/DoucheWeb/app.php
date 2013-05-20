@@ -86,11 +86,17 @@ $app->post('/login', 'interactor.user_login')
         return new RedirectResponse("/");
     })
     ->value('error_handlers', [
-        "Douche\Exception\UserNotFoundException" => function () {
-            return ['errors' => ['Invalid Credentials']];
+        "Douche\Exception\UserNotFoundException" => function ($e) {
+            return [
+                'errors' => ['Incorrect email provided.'],
+                'email' => $e->email,
+            ];
         },
-        "Douche\Exception\IncorrectPasswordException" => function () {
-            return ['errors' => ['Invalid Credentials']];
+        "Douche\Exception\IncorrectPasswordException" => function ($e) {
+            return [
+                'errors' => ['Invalid credentials provided.'],
+                'email' => $e->email,
+            ];
         },
     ])
     ->convert('request', function ($_, Request $request) {
