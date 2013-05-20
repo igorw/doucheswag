@@ -76,6 +76,12 @@ class EndToEndAuctionHelper
         );
     }
 
+    public function assertBiddingNotOffered()
+    {
+        $this->assertAuctionPresent();
+        $this->mink->assertSession()->elementNotExists('css', 'form#place_bid');
+    }
+
     protected function getUserHelper()
     {
         return $this->userHelper;
