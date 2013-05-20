@@ -1,9 +1,11 @@
+{{%FILTERS}}
+
 <h1>{{ auction.name }}</h1>
 
 {{> _user_menu.html }}
 
 {{# auction.highestBid }}
-    <p>Highest bid: {{ getAmount.getAmount }}</p>
+    <p>Highest bid: {{ getAmount | money_amount }}</p>
 {{/ auction.highestBid }}
 
 {{# auction.highestBidder }}
