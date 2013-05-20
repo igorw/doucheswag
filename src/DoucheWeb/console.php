@@ -3,6 +3,7 @@
 namespace DoucheWeb;
 
 use Douche\Storage\Sql\Util;
+use Douche\Entity\User;
 
 use Igorw\Silex\ConfigServiceProvider;
 
@@ -53,6 +54,26 @@ $console
         $endsAt = new \DateTime($input->getArgument('ends-at'));
         // $app['douche.auction_repo']->createAuction($name, $endsAt);
         throw new \RuntimeException('Not implemented yet');
+    });
+
+$console
+    ->register('create-user')
+    ->setDefinition([
+        new InputArgument('id', InputArgument::REQUIRED),
+        new InputArgument('name', InputArgument::REQUIRED),
+        new InputArgument('email', InputArgument::REQUIRED),
+        new InputArgument('passwordHash', InputArgument::REQUIRED),
+    ])
+    ->setDescription('Create a user')
+    ->setCode(function (InputInterface $input, OutputInterface $output) use ($app) {
+        $user = new User(
+            $input->getArgument('id'),
+            $input->getArgument('name'),
+            $input->getArgument('email'),
+            $input->getArgument('passwordHash')
+        );
+        $app['douche.user_repo']->add($user);
+        $app['douche.user_repo']->save();
     });
 
 $console->run();
