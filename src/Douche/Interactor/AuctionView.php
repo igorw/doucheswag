@@ -18,14 +18,7 @@ class AuctionView
     {
         $auction = $this->repo->find($request->id);
 
-        $view = new AuctionViewDto([
-            'id'            => $auction->getId(),
-            'name'          => $auction->getName(),
-            'highestBid'    => $auction->getHighestBid(),
-            'highestBidder' => $auction->getHighestBidder()
-                                ? $auction->getHighestBidder()->getId()
-                                : null,
-        ]);
+        $view = AuctionViewDto::fromEntity($auction);
 
         return new AuctionViewResponse($view);
     }

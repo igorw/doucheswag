@@ -18,16 +18,8 @@ class AuctionList
     public function __invoke()
     {
         $auctions = $this->repo->findAll();
-        $auctionViews = array_map([$this, 'createAuctionView'], $auctions);
+        $auctionViews = array_map("Douche\View\AuctionView::fromEntity", $auctions);
 
         return new AuctionListResponse($auctionViews);
-    }
-
-    public function createAuctionView(Auction $auction)
-    {
-        return new AuctionView([
-            'id'   => $auction->getId(),
-            'name' => $auction->getName(),
-        ]);
     }
 }
