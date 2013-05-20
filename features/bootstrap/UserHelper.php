@@ -77,6 +77,11 @@ class UserHelper
         assertSame($this->user->getId(), $this->response->user->id);
     }
 
+    protected function getUser()
+    {
+        return $this->user;
+    }
+
     private function getPasswordEncoder()
     {
         $this->passwordEncoder = $this->passwordEncoder ?: new UppercasePasswordEncoder();

@@ -7,6 +7,7 @@ use Douche\Interactor\AuctionViewRequest;
 use Douche\Interactor\UserLoginRequest;
 use Douche\Interactor\UserLoginResponse;
 use Douche\Interactor\AuctionViewResponse;
+use Douche\Interactor\BidRequest;
 use Douche\Exception\Exception as DoucheException;
 
 use Mustache\Silex\Provider\MustacheServiceProvider;
@@ -23,11 +24,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\KernelEvents;
 
+use Money\Money;
+use Money\Currency;
+
 $app = new Application();
 
 $app->register(new MonologServiceProvider());
 $app->register(new DoctrineServiceProvider());
-$app->register(new MustacheServiceProvider());
+$app->register(new MustacheServiceProvider(), [
+    'mustache.options' => [
+        'helpers' => [
+            'money_amount' => function ($money) {
+                return $money->getAmount() / 100;
+            },
+        ],
+    ],
+]);
 $app->register(new ServiceControllerServiceProvider());
 $app->register(new SessionServiceProvider());
 $app->register(new ServiceProvider());
@@ -39,6 +51,24 @@ $app->get('/auction/{id}', 'interactor.auction_view')
     ->value('controller', 'auction_view')
     ->convert('request', function ($_, Request $request) {
         return new AuctionViewRequest($request->attributes->get('id'));
+    });
+
+$app->post('/auction/{id}/bids', 'interactor.bid')
+    ->before(function (Request $request, Application $app) {
+        if (!$request->getSession()->has('current_user')) {
+            return $app->abort(401, 'Authenitcation Required');
+        }
+    })
+    ->value('controller', 'bid')
+    ->value('success_handler', function ($view, $request) {
+        return new RedirectResponse("/auction/" . $request->attributes->get('id'));
+    })
+    ->convert('request', function ($_, Request $request) {
+        return new BidRequest(
+            $request->attributes->get('id'),
+            $request->getSession()->get('current_user')->id,
+            new Money((int) $request->request->get('amount') * 100, new Currency($request->request->get('currency')))
+        );
     });
 
 $app->post('/login', 'interactor.user_login')
@@ -127,6 +157,15 @@ $app['dispatcher'] = $app->share($app->extend('dispatcher', function ($dispatche
         $body = $app['mustache']->render($template, $view);
         $response = new Response($body);
         $event->setResponse($response);
+    });
+
+    return $dispatcher;
+}));
+
+// TODO change to ->after once fabpot/silex#705 is merged
+$app['dispatcher'] = $app->share($app->extend('dispatcher', function ($dispatcher, $app) {
+    $dispatcher->addListener(KernelEvents::RESPONSE, function () use ($app) {
+        $app['douche.auction_repo']->save();
     });
 
     return $dispatcher;

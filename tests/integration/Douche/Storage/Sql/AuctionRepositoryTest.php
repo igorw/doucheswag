@@ -81,6 +81,37 @@ class AuctionRepositoryTest extends SqlTestCase
     }
 
     /** @test */
+    public function saveShouldInsertTheFirstBid()
+    {
+        $id = $this->createAuction(["bids" => []]);
+
+        $auction = $this->repo->find($id);
+
+        $userId = $this->createUser();
+        $user = $this->userRepo->find($userId);
+
+        $auction->bid($user, new Bid(
+            new Money(300, new Currency('GBP')),
+            new Money(900, new Currency('USD'))
+        ));
+
+        $this->repo->save();
+
+        $expected = [
+            'user_id' => $userId,
+            'amount' => '300',
+            'currency' => 'GBP',
+            'original_amount' => '900',
+            'original_currency' => 'USD',
+        ];
+
+        $bids =  $this->conn->fetchAll("SELECT user_id, amount, currency, original_amount, original_currency FROM auction_bids WHERE auction_id = ? ORDER BY amount ASC", [$id]);
+
+        $this->assertEquals(1, count($bids));
+        $this->assertEquals($expected, $bids[0]);
+    }
+
+    /** @test */
     public function saveShouldInsertAnyNewBids()
     {
         $id = $this->createAuction([

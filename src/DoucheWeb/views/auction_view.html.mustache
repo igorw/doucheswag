@@ -1,11 +1,24 @@
+{{%FILTERS}}
+
 <h1>{{ auction.name }}</h1>
 
 {{> _user_menu.html }}
 
 {{# auction.highestBid }}
-    <p>Highest bid: {{ . }}</p>
+    <p>Highest bid: {{ getAmount | money_amount }}</p>
 {{/ auction.highestBid }}
 
 {{# auction.highestBidder }}
-    <p>Highest bid: {{ . }}</p>
+    <p>Highest bidder: {{ . }}</p>
 {{/ auction.highestBidder }}
+
+<form action="/auction/{{ auction.id }}/bids" method="POST">
+    <select name="currency">
+        <option value="USD">USD</option>
+        <option value="GBP">GBP</option>
+    </select>
+
+    <input type="number" name="amount" value="" />
+
+    <input type="submit" value="Place Bid" />
+</form>
