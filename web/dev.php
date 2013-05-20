@@ -1,4 +1,4 @@
 <?php
 
 $env = 'dev';
-require __DIR__.'/front.php';
+return require __DIR__.'/front.php';
