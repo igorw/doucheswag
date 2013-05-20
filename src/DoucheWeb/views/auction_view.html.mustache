@@ -13,6 +13,12 @@
 {{/ auction.highestBidder }}
 
 {{# current_user }}
+    <hr>
+
+    {{# form_errors }}
+        <div class="alert alert-error">{{ . }}</div>
+    {{/ form_errors }}
+
     <form action="/auction/{{ auction.id }}/bids" method="POST">
         <label>Currency</label>
         <select name="currency">
@@ -24,7 +30,7 @@
         <input type="number" name="amount" value="" />
 
         <label></label>
-        <input type="submit" value="Place Bid" />
+        <input type="submit" value="Place Bid" class="btn" />
     </form>
 {{/ current_user }}
 
