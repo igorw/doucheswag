@@ -34,7 +34,7 @@ $app->register(new DoctrineServiceProvider());
 $app->register(new MustacheServiceProvider(), [
     'mustache.options' => [
         'helpers' => [
-            'money_amount' => function ($money) {
+            'format_money' => function ($money) {
                 return $money->getCurrency().' '.($money->getAmount() / 100);
             },
             'format_date' => function (\DateTime $date) {

@@ -7,7 +7,7 @@
 <p>Ends: {{ auction.endingAt | format_date }}</p>
 
 {{# auction.highestBid }}
-    <p>Highest bid: {{ getAmount | money_amount }}</p>
+    <p>Highest bid: {{ getAmount | format_money }}</p>
 {{/ auction.highestBid }}
 
 {{# auction.highestBidder }}
