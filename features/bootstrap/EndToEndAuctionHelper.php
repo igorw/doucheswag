@@ -51,12 +51,6 @@ class EndToEndAuctionHelper
 
     public function placeBid($amount, Currency $currency = null)
     {
-        $userId = $this->getUserHelper()->getCurrentUserId();
-
-        if ($userId == null) {
-            $userId = $this->getUserHelper()->createUser();
-        }
-
         $page = $this->mink->getSession()->getPage();
 
         $page->fillField('amount', $amount);
