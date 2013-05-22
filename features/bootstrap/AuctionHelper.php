@@ -109,8 +109,8 @@ class AuctionHelper
     {
         assertInstanceOf("Douche\Interactor\BidResponse", $this->response);
         assertNotSame(
-            $this->response->getBid()->getAmount(),
-            $this->response->getBid()->getOriginalAmount()
+            $this->response->bid->getAmount(),
+            $this->response->bid->getOriginalAmount()
         );
     }
 
