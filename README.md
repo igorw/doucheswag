@@ -29,6 +29,11 @@ Now you should be able to start the webserver and hit the page at
 
     $ make web
 
+## Slides
+
+Check out the [slides](https://speakerdeck.com/igorw/silex-an-implementation-detail)
+from the presentation.
+
 ## Authors
 
 * Dave Marshall (@davedevelopment)
