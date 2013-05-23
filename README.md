@@ -17,7 +17,7 @@ implementation detail".
 
 In order to set up the project, first install the dependencies via composer:
 
-    $ composer install
+    $ composer install --dev
 
 Then populate the production database (it's an sqlite db in the `store`
 directory):
