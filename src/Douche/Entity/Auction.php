@@ -13,6 +13,7 @@ class Auction
     private $id;
     private $name;
     private $endingAt;
+    private $currency;
     protected $bids = [];
 
     public function __construct($id, $name, DateTime $endingAt, Currency $currency)
