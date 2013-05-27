@@ -2,7 +2,7 @@
 
 use Behat\Mink\Mink;
 
-use Douche\Entity\UserRepository;
+use Douche\Repository\UserRepository;
 
 require_once __DIR__.'/UserHelper.php';
 

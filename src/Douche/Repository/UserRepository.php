@@ -1,6 +1,8 @@
 <?php
 
-namespace Douche\Entity;
+namespace Douche\Repository;
+
+use Douche\Entity\User;
 
 interface UserRepository
 {

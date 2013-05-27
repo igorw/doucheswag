@@ -3,7 +3,7 @@
 namespace Douche\Interactor;
 
 use Douche\Entity\Auction;
-use Douche\Entity\AuctionRepository;
+use Douche\Repository\AuctionRepository;
 use Douche\View\AuctionView;
 
 class AuctionList

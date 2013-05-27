@@ -2,13 +2,13 @@
 
 use Douche\Entity\Auction;
 use Douche\Entity\User;
-use Douche\Entity\UserRepository;
 use Douche\Interactor\AuctionList;
 use Douche\Interactor\AuctionView as AuctionViewInteractor;
 use Douche\Interactor\AuctionViewRequest;
 use Douche\Interactor\Bid as BidInteractor;
 use Douche\Interactor\BidRequest;
 use Douche\Repository\AuctionArrayRepository;
+use Douche\Repository\UserRepository;
 use Douche\Value\Bid as BidValue;
 use Douche\View\AuctionView;
 use Douche\Exception\Exception as DoucheException;

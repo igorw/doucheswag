@@ -2,8 +2,9 @@
 
 namespace Douche\Interactor;
 
-use Douche\Entity\AuctionRepository;
-use Douche\Entity\UserRepository;
+use Douche\Repository\AuctionRepository;
+use Douche\Repository\UserRepository;
+use Douche\Service\CurrencyConverter;
 use Douche\Value\Bid as BidValue;
 use Douche\View\AuctionView as AuctionViewDto;
 use Douche\Exception\AuctionClosedException;
@@ -12,7 +13,7 @@ class Bid
 {
     private $auctionRepo;
     private $userRepo;
-    private $converter; 
+    private $converter;
 
     public function __construct(AuctionRepository $auctionRepo, UserRepository $userRepo, CurrencyConverter $converter)
     {
