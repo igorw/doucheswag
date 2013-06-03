@@ -52,7 +52,7 @@ $console
     ->setCode(function (InputInterface $input, OutputInterface $output) use ($app) {
         $name = $input->getArgument('name');
         $endsAt = new \DateTime($input->getArgument('ends-at'));
-        $app['douche.auction_repo']->createAuction($name, $endsAt);
+        $app['douche.auction_repo']->createAuction($name, $endsAt, $app['default_currency']);
     });
 
 $console

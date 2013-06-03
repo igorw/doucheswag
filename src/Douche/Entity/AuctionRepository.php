@@ -6,5 +6,5 @@ interface AuctionRepository
 {
     function findAll();
     function find($id);
-    function createAuction($name, $endsAt);
+    function createAuction($name, $endsAt, $currency);
 }

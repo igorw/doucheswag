@@ -145,14 +145,13 @@ class AuctionRepository implements AuctionRepositoryInterface
         return $auctions;
     }
 
-    public function createAuction($name, $endsAt)
+    public function createAuction($name, $endsAt, $currency)
     {
-        $sql = sprintf("INSERT INTO auctions (name, ending_at, currency) VALUES ('%s', '%s', '%s')",
-            $name,
-            $endsAt->format('Y-m-d'),
-            'GBP'
+        $stmt = $this->conn->prepare('INSERT INTO auctions (name, ending_at, currency) VALUES (:name, :ending_at, :currency)');
+        $stmt->execute(array(
+            'name' => $name,
+            'ending_at' => $endsAt->format('Y-m-d'),
+            'currency' => $currency)
         );
-
-        $this->conn->executeQuery($sql);
     }
 }

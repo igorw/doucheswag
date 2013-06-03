@@ -189,4 +189,6 @@ $app['dispatcher'] = $app->share($app->extend('dispatcher', function ($dispatche
     return $dispatcher;
 }));
 
+$app['default_currency'] = 'GBP';
+
 return $app;
