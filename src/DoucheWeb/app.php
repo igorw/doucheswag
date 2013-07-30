@@ -126,67 +126,51 @@ $app['resolver'] = $app->share($app->extend('resolver', function ($resolver, $ap
     return $resolver;
 }));
 
-// TODO change to ->error once fabpot/silex#705 is merged
-$app['dispatcher'] = $app->share($app->extend('dispatcher', function ($dispatcher, $app) {
-    $dispatcher->addListener(KernelEvents::EXCEPTION, new ExceptionListenerWrapper($app, function (DoucheException $e, $code) use ($app) {
-        $app['request']->attributes->set('failed', true);
+$app->error(function (DoucheException $e, $code) use ($app) {
+    $app['request']->attributes->set('failed', true);
 
-        $errorHandlers = $app['request']->attributes->get('error_handlers', []);
+    $errorHandlers = $app['request']->attributes->get('error_handlers', []);
 
-        foreach ($errorHandlers as $type => $handler) {
-            if ($e instanceof $type) {
-                return $handler($e, $code, $app['request']);
-            }
+    foreach ($errorHandlers as $type => $handler) {
+        if ($e instanceof $type) {
+            return $handler($e, $code, $app['request']);
         }
+    }
+});
 
-    }), -8);
+$app->on(KernelEvents::VIEW, function ($event) use ($app) {
+    $view = $event->getControllerResult();
 
-    return $dispatcher;
-}));
+    if (is_null($view) || is_string($view)) {
+        return;
+    }
 
-// TODO change to ->on once fabpot/silex#705 is merged
-$app['dispatcher'] = $app->share($app->extend('dispatcher', function ($dispatcher, $app) {
-    $dispatcher->addListener(KernelEvents::VIEW, function ($event) use ($app) {
-        $view = $event->getControllerResult();
+    $request = $event->getRequest();
 
-        if (is_null($view) || is_string($view)) {
+    if (!$request->attributes->get('failed') && $request->attributes->has('success_handler')) {
+        $handler = $request->attributes->get('success_handler');
+
+        $view = $handler($view, $request);
+        if ($view instanceof Response) {
+            $event->setResponse($view);
             return;
         }
+    }
 
-        $request = $event->getRequest();
+    $controller = $request->attributes->get('controller');
+    $template = "$controller.html";
 
-        if (!$request->attributes->get('failed') && $request->attributes->has('success_handler')) {
-            $handler = $request->attributes->get('success_handler');
+    $view = (object) $view;
+    $view->current_user = $request->getSession()->get('current_user');
+    $view->form_errors = $request->getSession()->getFlashBag()->get('errors');
 
-            $view = $handler($view, $request);
-            if ($view instanceof Response) {
-                $event->setResponse($view);
-                return;
-            }
-        }
+    $body = $app['mustache']->render($template, $view);
+    $response = new Response($body);
+    $event->setResponse($response);
+});
 
-        $controller = $request->attributes->get('controller');
-        $template = "$controller.html";
-
-        $view = (object) $view;
-        $view->current_user = $request->getSession()->get('current_user');
-        $view->form_errors = $request->getSession()->getFlashBag()->get('errors');
-
-        $body = $app['mustache']->render($template, $view);
-        $response = new Response($body);
-        $event->setResponse($response);
-    });
-
-    return $dispatcher;
-}));
-
-// TODO change to ->after once fabpot/silex#705 is merged
-$app['dispatcher'] = $app->share($app->extend('dispatcher', function ($dispatcher, $app) {
-    $dispatcher->addListener(KernelEvents::RESPONSE, function () use ($app) {
-        $app['douche.auction_repo']->save();
-    });
-
-    return $dispatcher;
-}));
+$app->after(function () use ($app) {
+    $app['douche.auction_repo']->save();
+});
 
 return $app;

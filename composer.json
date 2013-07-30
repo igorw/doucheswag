@@ -24,7 +24,7 @@
         "monolog/monolog": "~1.4",
         "mustache/mustache": "~2.3",
         "mustache/silex-provider": "~1.0",
-        "silex/silex": "~1.0",
+        "silex/silex": "~1.1",
         "symfony/console": "~2.2",
         "symfony/monolog-bridge": "~2.2"
     },
