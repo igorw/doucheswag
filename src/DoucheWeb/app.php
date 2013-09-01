@@ -52,7 +52,7 @@ $app->get('/', 'interactor.auction_list')
 
 $app->get('/auction/{id}', 'interactor.auction_view')
     ->value('controller', 'auction_view')
-    ->convert('request', function ($_, Request $request) {
+    ->convert('request', function ($request) {
         return new AuctionViewRequest($request->attributes->get('id'));
     });
 
@@ -74,7 +74,7 @@ $app->post('/auction/{id}/bids', 'interactor.bid')
             return new RedirectResponse("/auction/" . $request->attributes->get('id'));
         },
     ])
-    ->convert('request', function ($_, Request $request) {
+    ->convert('request', function ($request) {
         return new BidRequest(
             $request->attributes->get('id'),
             $request->getSession()->get('current_user')->id,
@@ -102,7 +102,7 @@ $app->post('/login', 'interactor.user_login')
             ];
         },
     ])
-    ->convert('request', function ($_, Request $request) {
+    ->convert('request', function ($request) {
         return new UserLoginRequest($request->request->all());
     });
 
@@ -125,6 +125,10 @@ $app['resolver'] = $app->share($app->extend('resolver', function ($resolver, $ap
 
     return $resolver;
 }));
+
+$app->before(function (Request $request) {
+    $request->attributes->set('request', $request);
+});
 
 $app->error(function (DoucheException $e, $code) use ($app) {
     $app['request']->attributes->set('failed', true);
