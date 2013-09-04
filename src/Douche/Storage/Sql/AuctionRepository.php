@@ -60,8 +60,9 @@ class AuctionRepository implements AuctionRepositoryInterface
             return null;
         }
 
-        $_ = $this->rowsToAuctions($rows);
-        return reset($_);
+        $auctions = $this->rowsToAuctions($rows);
+        $first = reset($auctions);
+        return $first;
     }
 
     public function save()
