@@ -20,11 +20,6 @@ use Douche\Repository\AuctionArrayRepository;
 use Douche\Repository\UserArrayRepository;
 use Douche\View\AuctionView;
 
-require_once __DIR__ . '/AuctionHelper.php';
-require_once __DIR__ . '/EndToEndAuctionHelper.php';
-require_once __DIR__ . '/UserHelper.php';
-require_once __DIR__ . '/EndToEndUserHelper.php';
-
 require_once 'vendor/phpunit/phpunit/PHPUnit/Framework/Assert/Functions.php';
 
 class FeatureContext extends BehatContext
