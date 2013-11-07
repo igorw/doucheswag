@@ -10,8 +10,8 @@ The core is an auction application. The main delivery mechanism that plugs
 into it is based on [silex](http://silex.sensiolabs.org) and maps web requests
 onto the application-specific request objects.
 
-It was made for a talk given at Symfony Live Portland 2013 titled "Silex: An
-implementation detail".
+It was made for a talk given at Symfony Live Portland 2013 titled "[Silex: An
+implementation detail](https://www.youtube.com/watch?v=bTawx0TGIj8)".
 
 ## Setup
 
