@@ -57,7 +57,8 @@ class AuctionHelper
         $this->response = $interactor($request);
     }
 
-    public function placeBidWithAlternateCurrency($amount, $userId = null) {
+    public function placeBidWithAlternateCurrency($amount, $userId = null)
+    {
         return $this->placeBid($amount, $userId, new Currency("GBP"));
     }
 

@@ -72,7 +72,7 @@ class AuctionRepository implements AuctionRepositoryInterface
                 continue;
             }
 
-            $this->conn->transactional(function() use ($auction) {
+            $this->conn->transactional(function () use ($auction) {
 
                 $this->conn->delete('auction_bids', ['auction_id' => $auction->getId()]);
 
@@ -97,7 +97,7 @@ class AuctionRepository implements AuctionRepositoryInterface
         $groupedRows = [];
         $auctions = [];
 
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             if (!isset($groupedRows[$row['id']])) {
                 $groupedRows[$row['id']] = [];
             }
