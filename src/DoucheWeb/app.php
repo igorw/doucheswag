@@ -59,7 +59,7 @@ $app->get('/auction/{id}', 'interactor.auction_view')
 $app->post('/auction/{id}/bids', 'interactor.bid')
     ->before(function (Request $request, Application $app) {
         if (!$request->getSession()->has('current_user')) {
-            return $app->abort(401, 'Authenitcation Required');
+            return $app->abort(401, 'Authentication Required');
         }
     })
     ->value('controller', 'bid')
@@ -106,7 +106,7 @@ $app->post('/login', 'interactor.user_login')
         return new UserLoginRequest($request->request->all());
     });
 
-$app->get('/login', function(Request $request, Application $app) {
+$app->get('/login', function (Request $request, Application $app) {
     $view = [
         'errors' => [],
     ];
@@ -114,7 +114,7 @@ $app->get('/login', function(Request $request, Application $app) {
     return $app['mustache']->render('login.html.mustache', $view);
 });
 
-$app->get('/logout', function(Request $request, Application $app) {
+$app->get('/logout', function (Request $request, Application $app) {
     $request->getSession()->start();
     $request->getSession()->invalidate();
     return $app->redirect("/");
