@@ -1,6 +1,6 @@
 <?php
 
-namespace Douche\Interactor;
+namespace Douche\Service;
 
 interface PasswordEncoder
 {

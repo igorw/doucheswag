@@ -2,8 +2,6 @@
 
 namespace Douche\Repository;
 
-use Douche\Entity\AuctionRepository;
-
 class AuctionArrayRepository implements AuctionRepository
 {
     private $auctions;

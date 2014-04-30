@@ -3,9 +3,10 @@
 namespace Douche\Interactor;
 
 use Douche\View\UserView;
-use Douche\Entity\UserRepository;
 use Douche\Exception\IncorrectPasswordException;
 use Douche\Exception\UserNotFoundException;
+use Douche\Repository\UserRepository;
+use Douche\Service\PasswordEncoder;
 
 class UserLogin
 {

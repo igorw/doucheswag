@@ -3,7 +3,8 @@
 namespace Douche\Interactor;
 
 use Douche\Entity\User;
-use Douche\Entity\UserRepository;
+use Douche\Repository\UserRepository;
+use Douche\Service\PasswordEncoder;
 
 class RegisterUser
 {

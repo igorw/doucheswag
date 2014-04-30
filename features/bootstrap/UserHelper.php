@@ -1,11 +1,11 @@
 <?php
 
-use Douche\Entity\UserRepository;
 use Douche\Entity\User;
 use Douche\Interactor\RegisterUser;
 use Douche\Interactor\RegisterUserRequest;
 use Douche\Interactor\UserLogin;
 use Douche\Interactor\UserLoginRequest;
+use Douche\Repository\UserRepository;
 use Douche\Service\UppercasePasswordEncoder;
 
 require_once 'vendor/phpunit/phpunit/PHPUnit/Framework/Assert/Functions.php';

@@ -3,7 +3,6 @@
 namespace Douche\Repository;
 
 use Douche\Entity\User;
-use Douche\Entity\UserRepository;
 
 class UserArrayRepository implements UserRepository
 {

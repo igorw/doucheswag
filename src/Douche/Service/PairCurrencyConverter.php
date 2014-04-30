@@ -2,7 +2,6 @@
 
 namespace Douche\Service;
 
-use Douche\Interactor\CurrencyConverter;
 use Money\Money;
 use Money\Currency;
 use Money\CurrencyPair;

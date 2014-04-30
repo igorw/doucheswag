@@ -3,8 +3,8 @@
 namespace Douche\Storage\File;
 
 use Douche\Entity\User;
-use Douche\Entity\UserRepository as UserRepositoryInterface;
 use Douche\Exception\UserNotFoundException;
+use Douche\Repository\UserRepository as UserRepositoryInterface;
 
 class UserRepository implements UserRepositoryInterface
 {

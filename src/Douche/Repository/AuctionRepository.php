@@ -1,6 +1,6 @@
 <?php
 
-namespace Douche\Entity;
+namespace Douche\Repository;
 
 interface AuctionRepository
 {

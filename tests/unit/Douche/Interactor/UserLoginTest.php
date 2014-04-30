@@ -12,8 +12,8 @@ class UserLoginTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->userRepo = Phake::mock('Douche\Entity\UserRepository');
-        $this->passwordEncoder = Phake::mock('Douche\Interactor\PasswordEncoder');
+        $this->userRepo = Phake::mock('Douche\Repository\UserRepository');
+        $this->passwordEncoder = Phake::mock('Douche\Service\PasswordEncoder');
         $this->interactor = new UserLogin($this->userRepo, $this->passwordEncoder);
 
         Phake::when($this->userRepo)->findOneByEmail('dave@example.com')->thenReturn(

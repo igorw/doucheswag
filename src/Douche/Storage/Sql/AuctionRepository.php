@@ -3,8 +3,8 @@
 namespace Douche\Storage\Sql;
 
 use Doctrine\Dbal\Connection;
-use Douche\Entity\UserRepository;
-use Douche\Entity\AuctionRepository as AuctionRepositoryInterface;
+use Douche\Repository\AuctionRepository as AuctionRepositoryInterface;
+use Douche\Repository\UserRepository;
 use Douche\Value\Bid;
 use Money\Money;
 use Money\Currency;
