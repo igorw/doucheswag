@@ -177,4 +177,6 @@ $app->after(function () use ($app) {
     $app['douche.auction_repo']->save();
 });
 
+$app['default_currency'] = 'GBP';
+
 return $app;
